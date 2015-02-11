@@ -10,3 +10,4 @@ insecure
 jquery
 iron:router
 bootstrap
+manuelschoebel:wait-on-lib
