@@ -23,8 +23,18 @@
 	display:none;
 }
 
-#emoji {
+.bottom{
 	height:14%;
+	text-align:center;
+}
+.bottom input{
+	width:70%;
+	display:block;
+	margin:10px auto;
+}
+
+#emoji {
+	
 }
 
 #question h1{

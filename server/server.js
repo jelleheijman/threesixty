@@ -5,8 +5,8 @@ if (Meteor.isServer) {
 	Users = new Mongo.Collection("users");
 	TickerItems = new Mongo.Collection("ticker_items");
 	Connections = new Mongo.Collection("connections");
-	
-	
+	Questions = new Mongo.Collection("questions");
+
 	Meteor.methods({
 	  	heartbeat: function (deviceid) {
 		  	if (deviceid === null){

@@ -3,14 +3,13 @@ if (Meteor.isClient) {
 
 	Template.ipad.rendered = function(){
 		setTimeout( function(){
-		   	console.log(Users.find().fetch());
-			if (Users.findOne({'ipadid':Session.get('ipadid')}) === undefined){
-				Users.insert({'ipadid':Session.get('ipadid')});
-				console.log('iPad ID doesn\'t exist. Creating new for ' + Session.get('ipadid'));
+			if (Connections.findOne({'deviceid':Session.get('deviceid')}) === undefined){
+				Connections.insert({'deviceid':Session.get('deviceid'), type:'ipad'});
+				console.log('iPad ID doesn\'t exist. Creating new for ' + Session.get('deviceid'));
 			} else {
 				console.log('iPad ID already exists');
 			}
-			Session.set('mongoid', Users.findOne({'ipadid':Session.get('ipadid')})._id);
+			Session.set('mongoid', Connections.findOne({'deviceid':Session.get('deviceid')})._id );
 	
 	
 			var settingsCursor = SystemSettings.find({});
@@ -36,23 +35,19 @@ if (Meteor.isClient) {
 
 	};
 	
-
-	
 	Template.ipad.helpers({
-		fdsfdsa: function(){
-			var contentStatus = SystemSettings.find({'name':'ipadUpper'}).fetch();
-			if (tickerStatus.length > 0) {
-				return tickerStatus[0].onOff.toUpperCase();
-			}
-		}
+
 	});
 	Template.ipad.events({
 		'click #emoji button': function(event, template){
-			Users.update(session.get('mongoid'), {$set:{emoji:event.target.name}});
+			Connections.update(Session.get('mongoid'), {$set:{emoji:event.target.name}});
+		},
+		'submit form': function(event, template){
+			console.log(Session.deviceid);
+			TickerItems.insert( { created:new Date(), user:Session.get('deviceid'), approved:true, cyclesRemaining:1, text:event.target.message.value } );
+			$('#messageInput').val('');
+			event.preventDefault();
+			return false;
 		}
 	});
-
-
 }
-
-

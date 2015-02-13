@@ -1,4 +1,3 @@
-
 if (Meteor.isClient) {
 
 	Template.wall.rendered = function(){
@@ -22,9 +21,7 @@ if (Meteor.isClient) {
 		var sceneStripHeight = sceneStripWidth / stripAspect;
 		var cubes = [];
 		var camZ = 16110;
-		
 
-		
 		var views = [
 			{
 				left: 0, bottom: 2/3, width: .5, height: 1/3, camLeft:-3000, camRight:-2000,
