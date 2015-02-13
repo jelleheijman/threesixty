@@ -37,9 +37,9 @@ if (Meteor.isClient) {
 	});
 	TickerItems = new Mongo.Collection("ticker_items");
 
-	Router.route('/controller', function(){
-		Session.set('deviceid', 'controller_main');
-		this.render('controllerMain');
+	Router.route('/controller_wall', function(){
+		Session.set('deviceid', 'controller_wall');
+		this.render('controllerWall');
 	});
 	
 	Router.route('/controller_ticker', function(){
@@ -50,9 +50,9 @@ if (Meteor.isClient) {
 		Session.set('deviceid', 'controller_ipad_controls');
 		this.render('controllerIpadControls');
 	});
-	Router.route('/controller_ipad_connections', function(){
-		Session.set('deviceid', 'controller_ipad_connections');
-		this.render('controllerIpadConnections');
+	Router.route('/controller_device_connections', function(){
+		Session.set('deviceid', 'controller_device_connections');
+		this.render('controllerDeviceConnections');
 	});
 	Router.route('/controller_questions', function(){
 		Session.set('deviceid', 'controller_questions');

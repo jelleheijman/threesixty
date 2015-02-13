@@ -1,21 +1,22 @@
 <template name='ipad'>
 	<div id='ipad'>
-		<div class='section upper hidden' id='research'>
+		<div class='section upper {{topHidden "research"}}' id='research'>
 			<h1>RESEARCH</h1>
 		
 		</div>
 		
-		<div class='section upper hidden' id='question'>
-			<h1>This is the text of the question being asked.</h1>
-			<h2>Option 1</h2>
-			<h2>Option 2</h2>
-			<h2>Option 3</h2>
-			<h2>Option 4</h2>
-			<h2>Option 5</h2>
-			<h2>Option 5</h2>
+		<div class='section upper {{topHidden "question"}}' id='question'>
+			
+			<h1>{{activeQuestion 'questionText'}}</h1>
+			<h2>{{activeQuestion 'answer1'}}</h2>
+			<h2>{{activeQuestion 'answer2'}}</h2>
+			<h2>{{activeQuestion 'answer3'}}</h2>
+			<h2>{{activeQuestion 'answer4'}}</h2>
+			<h2>{{activeQuestion 'answer5'}}</h2>
+			<h2>{{activeQuestion 'answer6'}}</h2>
 		</div>
 		
-		<div class='section upper hidden' id='standby'>
+		<div class='section upper {{topHidden "standby"}}' id='standby'>
 			<h1>WELCOME</h1>
 		
 		</div>

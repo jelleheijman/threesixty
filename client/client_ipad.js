@@ -10,40 +10,34 @@ if (Meteor.isClient) {
 				console.log('iPad ID already exists');
 			}
 			Session.set('mongoid', Connections.findOne({'deviceid':Session.get('deviceid')})._id );
-	
-	
-			var settingsCursor = SystemSettings.find({});
-
-			var settingsOberver = settingsCursor.observe({
-	            changed: function(newTickerItem, oldTickerItem){
-					updateSettings(newTickerItem);
-	            },
-	            added: function(newTickerItem, oldTickerItem){
-					updateSettings(newTickerItem);
-	            },
-		    });
 		}, 2000);
-
-		function updateSettings(newTickerItem){
-			switch (newTickerItem.name) {
-				case 'ipadUpper':
-					$(".upper").addClass('hidden');
-					$("#" + newTickerItem.value).removeClass('hidden');
-					break;
-		}
-	}
-
 	};
 	
 	Template.ipad.helpers({
+		activeQuestion:function(key){
+				var activeQuestionSetting = SystemSettings.findOne({'name':'activeQuestion'});
+				if ( activeQuestionSetting ){
+					var activeQuestion = Questions.findOne({'_id':activeQuestionSetting.value});
+					if ( activeQuestion ) {
+						return activeQuestion[key];			
+					}		
+				}
 
+		},
+		topHidden:function(name){
+			var activeTop = SystemSettings.findOne({'name':'ipadUpper'});
+			if (activeTop) {
+				return name != activeTop.value ? 'hidden' : '';
+			} else {
+				return '';
+			}
+		}
 	});
 	Template.ipad.events({
 		'click #emoji button': function(event, template){
 			Connections.update(Session.get('mongoid'), {$set:{emoji:event.target.name}});
 		},
 		'submit form': function(event, template){
-			console.log(Session.deviceid);
 			TickerItems.insert( { created:new Date(), user:Session.get('deviceid'), approved:true, cyclesRemaining:1, text:event.target.message.value } );
 			$('#messageInput').val('');
 			event.preventDefault();
