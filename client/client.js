@@ -60,33 +60,33 @@ if (Meteor.isClient) {
 	});
 	Router.route('/wall', {
 	    onBeforeAction: function(){
-			var threejs = IRLibLoader.load('http://threesixty/js/three.js', {
+			var threejs = IRLibLoader.load('/js/three.js', {
 				success: function(){ },
 				error: function(){ }
 			});
 			if(threejs.ready()){
 				
-				var a = IRLibLoader.load('http://threesixty/js/html2canvas.js', {
+				var a = IRLibLoader.load('/js/html2canvas.js', {
 					success: function(){ },
 					error: function(){ }
 				});
-				var b = IRLibLoader.load('http://threesixty/js/ReconnectingWebSocketNew.js', {
+				var b = IRLibLoader.load('/js/ReconnectingWebSocketNew.js', {
 					success: function(){ },
 					error: function(){  }
 				});
-				var c = IRLibLoader.load('http://threesixty/js/TweenMax.min.js', {
+				var c = IRLibLoader.load('/js/TweenMax.min.js', {
 					success: function(){ },
 					error: function(){ }
 				});
-				var d = IRLibLoader.load('http://threesixty/js/EasePack.min.js', {
+				var d = IRLibLoader.load('/js/EasePack.min.js', {
 					success: function(){  },
 					error: function(){  }
 				});
-				var e = IRLibLoader.load('http://threesixty/js/Ticker.js', {
+				var e = IRLibLoader.load('/js/Ticker.js', {
 					success: function(){ },
 					error: function(){ }
 				});
-				var f = IRLibLoader.load('http://threesixty/js/DomPlane.js', {
+				var f = IRLibLoader.load('/js/DomPlane.js', {
 					success: function(){ },
 					error: function(){  }
 				});
