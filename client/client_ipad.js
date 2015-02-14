@@ -13,7 +13,7 @@ if (Meteor.isClient) {
 			}
 
 		},
-		topHidden:function(name){
+		ipadTopVisible:function(name){
 			var activeTop = SystemSettings.findOne({'name':'ipadUpper'});
 			if (activeTop) {
 				return name != activeTop.value ? 'hidden' : '';

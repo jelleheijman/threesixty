@@ -1,11 +1,11 @@
 <template name='ipad'>
 	<div id='ipad'>
-		<div class='section upper {{topHidden "research"}}' id='research'>
+		<div class='section upper {{ipadTopVisible "research"}}' id='research'>
 			<h1>RESEARCH</h1>
 		
 		</div>
 		
-		<div class='section upper {{topHidden "question"}}' id='question'>
+		<div class='section upper {{ipadTopVisible "question"}}' id='question'>
 			
 			<h1>{{activeQuestion 'questionText'}}</h1>
 			<h2 class="{{answerVisible 'answer1'}}">{{activeQuestion 'answer1'}}</h2>
@@ -16,7 +16,7 @@
 			<h2 class="{{answerVisible 'answer6'}}">{{activeQuestion 'answer6'}}</h2>
 		</div>
 		
-		<div class='section upper {{topHidden "standby"}}' id='standby'>
+		<div class='section upper {{ipadTopVisible "standby"}}' id='standby'>
 			<h1>WELCOME</h1>
 		
 		</div>
