@@ -1,0 +1,38 @@
+<template name='controllerDeviceConnections'>
+	{{> navigation}}
+	<div class="controllerBody">
+		<div style='text-align:center; padding:5px;'>
+	  		<button type="button" name='ipad' class="btn btn-default btn-lg filter">
+		  		iPads
+		  	</button>		
+	  		<button type="button" name='controller' class="btn btn-default btn-lg filter">
+		  		Controllers
+		  	</button>		
+		</div>
+	    <table class='table table-striped table-bordered'>
+		  <thead>
+			  <tr>
+				  <th width=10%>Device ID</th>
+				  <th width=80%>Status</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+		      {{#each devices}}
+		        {{> device}}
+		      {{/each}}
+		  </tbody>
+	    </table>
+
+	</div>
+</template>
+<template name="device">
+  	<tr>
+	  <td>{{deviceid}}</td>
+	  <td>{{toUpperCase status}}</td>
+	  <td>
+	  		<button type="button" name={{_id}} class="btn btn-default btn-lg deleteConnectedDevice">
+		  		X
+		  	</button>
+	  </td>
+   </tr>
+</template>

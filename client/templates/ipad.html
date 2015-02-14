@@ -8,12 +8,12 @@
 		<div class='section upper {{topHidden "question"}}' id='question'>
 			
 			<h1>{{activeQuestion 'questionText'}}</h1>
-			<h2>{{activeQuestion 'answer1'}}</h2>
-			<h2>{{activeQuestion 'answer2'}}</h2>
-			<h2>{{activeQuestion 'answer3'}}</h2>
-			<h2>{{activeQuestion 'answer4'}}</h2>
-			<h2>{{activeQuestion 'answer5'}}</h2>
-			<h2>{{activeQuestion 'answer6'}}</h2>
+			<h2 class="{{answerVisible 'answer1'}}">{{activeQuestion 'answer1'}}</h2>
+			<h2 class="{{answerVisible 'answer2'}}">{{activeQuestion 'answer2'}}</h2>
+			<h2 class="{{answerVisible 'answer3'}}">{{activeQuestion 'answer3'}}</h2>
+			<h2 class="{{answerVisible 'answer4'}}">{{activeQuestion 'answer4'}}</h2>
+			<h2 class="{{answerVisible 'answer5'}}">{{activeQuestion 'answer5'}}</h2>
+			<h2 class="{{answerVisible 'answer6'}}">{{activeQuestion 'answer6'}}</h2>
 		</div>
 		
 		<div class='section upper {{topHidden "standby"}}' id='standby'>
@@ -22,14 +22,14 @@
 		</div>
 		
 		
-		<div class='section bottom hidden' id='emoji'>
+		<div class='section bottom {{ipadLowerVisible 'emoji'}}' id='emoji'>
 			<button class='btn btn-large happy' name='happy'>HAPPY</button>
 			<button class='btn btn-large sad' name='sad'>SAD</button>
 			<button class='btn btn-large angry' name='angry'>ANGRY</button>
 			<button class='btn btn-large eyeroll' name='eyeroll'>EYE ROLL</button>
 		</div>
 		
-		<div class='section bottom' id='message'>
+		<div class='section bottom {{ipadLowerVisible 'message'}}' id='message'>
 			<form>
 				<div class='form-group'>
 					<input type='text' class="form-control" name='message' id='messageInput'>

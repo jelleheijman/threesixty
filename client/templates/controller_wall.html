@@ -1,0 +1,12 @@
+<template name='controllerWall'>
+	{{> navigation}}
+		<div class='controllerBody'>
+			<button class='btn btn-large mode' name='question'>Question</button>
+			<button class='btn btn-large mode' name='vote'>Vote</button>
+			<button class='btn btn-large mode' name='results'>Results</button>
+			<button class='btn btn-large mode' name='emoji'>Emoji</button>	
+		</div>
+		<div class='controllerBody'>
+			<button class='btn btn-large mode' id='ticker' name='ticker'>Toggle Ticker</button>	{{tickerStatus}}
+		</div>
+</template>

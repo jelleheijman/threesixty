@@ -1,11 +1,38 @@
-
-
-if (Meteor.isServer) {
+Meteor.startup( function(){
 	SystemSettings = new Mongo.Collection("system_settings");
 	Users = new Mongo.Collection("users");
 	TickerItems = new Mongo.Collection("ticker_items");
 	Connections = new Mongo.Collection("connections");
 	Questions = new Mongo.Collection("questions");
+	
+	var numIpads = 100;
+
+    for (var i=1; i<=numIpads; i++){
+        var id = i.toString();
+        if (id.length == 1){
+            id = '00' + id;
+        } else if (id.length == 2){
+            id = '0' + id;
+        }
+        if (!Connections.findOne({deviceid:id})){
+            Connections.insert({deviceid:id});
+        }
+    }
+	
+	var baseSettings = ['activeQuestion', 'ipadUpper'];
+	for (i=0; i<baseSettings.length; i++){
+    	if (!SystemSettings.findOne({name:baseSettings[i]})){
+        	SystemSettings.insert({name:baseSettings[i], value:''});
+        }    	
+	}
+
+	
+
+
+});
+
+if (Meteor.isServer) {
+
 
 	Meteor.methods({
 	  	heartbeat: function (deviceid) {

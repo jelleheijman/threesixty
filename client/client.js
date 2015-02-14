@@ -109,6 +109,12 @@ if (Meteor.isClient) {
 	Meteor.setInterval(function () {
 		Meteor.call('heartbeat', Session.get('deviceid'));
 	}, 5000);
+	
+	UI.registerHelper('toUpperCase', function(str){
+	    if (str){
+	        return str.toUpperCase();
+	    }
+	});
 }
 
 

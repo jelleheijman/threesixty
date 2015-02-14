@@ -1,27 +1,16 @@
 
 if (Meteor.isClient) {
+    Session.set('ipadLower', 'emoji');
 
-	Template.ipad.rendered = function(){
-		setTimeout( function(){
-			if (Connections.findOne({'deviceid':Session.get('deviceid')}) === undefined){
-				Connections.insert({'deviceid':Session.get('deviceid'), type:'ipad'});
-				console.log('iPad ID doesn\'t exist. Creating new for ' + Session.get('deviceid'));
-			} else {
-				console.log('iPad ID already exists');
-			}
-			Session.set('mongoid', Connections.findOne({'deviceid':Session.get('deviceid')})._id );
-		}, 2000);
-	};
-	
 	Template.ipad.helpers({
 		activeQuestion:function(key){
-				var activeQuestionSetting = SystemSettings.findOne({'name':'activeQuestion'});
-				if ( activeQuestionSetting ){
-					var activeQuestion = Questions.findOne({'_id':activeQuestionSetting.value});
-					if ( activeQuestion ) {
-						return activeQuestion[key];			
-					}		
-				}
+			var activeQuestionSetting = SystemSettings.findOne({'name':'activeQuestion'});
+			if ( activeQuestionSetting ){
+				var activeQuestion = Questions.findOne(activeQuestionSetting.value);
+				if ( activeQuestion ) {
+					return activeQuestion[key];			
+				}		
+			}
 
 		},
 		topHidden:function(name){
@@ -31,6 +20,24 @@ if (Meteor.isClient) {
 			} else {
 				return '';
 			}
+		},
+		ipadLowerVisible:function(name){
+		    if (name == Session.get('ipadLower')){
+    		    return '';
+		    } else {
+    		    return 'hidden';
+		    }
+		},
+		answerVisible:function(name){
+			var activeQuestionSetting = SystemSettings.findOne({'name':'activeQuestion'});
+			if ( activeQuestionSetting ){
+				var activeQuestion = Questions.findOne(activeQuestionSetting.value);
+				if ( activeQuestion[name] ) {
+					return '';			
+				} else {
+    				return 'hidden';
+				}
+			}		    
 		}
 	});
 	Template.ipad.events({
