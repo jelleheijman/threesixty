@@ -8,23 +8,26 @@
 }
 
 #ipad .section{
-	margin:10px;
-	padding:10px;
+	margin:1%;
+	padding:1%;
+	width:96%;
 	background-color:#DDDDDD;
 	border-radius:5px;
 	text-align:center;
+	position:absolute;
 }
 
 .upper {
 	height:80%;
-}
-
-.hidden {
-	display:none;
+	top:0;
+	left:0;
 }
 
 .bottom{
-	height:14%;
+    position:absolute;
+    top:83%;
+    left:0;
+	height:13%;
 	text-align:center;
 }
 .bottom input{

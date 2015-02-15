@@ -16,27 +16,21 @@ if (Meteor.isClient) {
 		ipadTopVisible:function(name){
 			var activeTop = SystemSettings.findOne({'name':'ipadUpper'});
 			if (activeTop) {
-				return name != activeTop.value ? 'hidden' : '';
+				return name === activeTop.value ? 'visibleFade' : 'hiddenFade';
 			} else {
 				return '';
 			}
 		},
 		ipadLowerVisible:function(name){
-		    if (name == Session.get('ipadLower')){
-    		    return '';
-		    } else {
-    		    return 'hidden';
-		    }
+		    return name === Session.get('ipadLower') ? 'visibleFade' : 'hiddenFade';
 		},
 		answerVisible:function(name){
 			var activeQuestionSetting = SystemSettings.findOne({'name':'activeQuestion'});
 			if ( activeQuestionSetting ){
 				var activeQuestion = Questions.findOne(activeQuestionSetting.value);
-				if ( activeQuestion[name] ) {
-					return '';			
-				} else {
-    				return 'hidden';
-				}
+				if ( activeQuestion ) {
+					return activeQuestion[name] ? 'visible' : 'hidden';		
+				} 
 			}		    
 		}
 	});
