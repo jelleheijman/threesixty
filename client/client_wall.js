@@ -1,11 +1,9 @@
 if (Meteor.isClient) {
-
 	Template.wall.rendered = function(){
-	
 	  // This code only runs on the client
 		var camera, scene, renderer;
 		var ticker;
-		var renderWidth = 1290 * 2;
+		var renderWidth = 1280 * 2;
 		var renderHeight = 720;
 		var realWidth = 36225;
 		var realHeight = 900;
@@ -19,8 +17,9 @@ if (Meteor.isClient) {
 		var sceneWidth = 6000;
 		var sceneStripWidth = sceneWidth / numCols / numRows;
 		var sceneStripHeight = sceneStripWidth / stripAspect;
-		var cubes = [];
 		var camZ = 16110;
+		
+		var emoji;
 
 		var views = [
 			{
@@ -59,7 +58,7 @@ if (Meteor.isClient) {
 			ticker = new Ticker( sceneWidth, tickerCursor.fetch() );
 			ticker.position.y = -80;
 			scene.add(ticker);
-			animate();
+			
 			
 			var initializingTicker = true;
 			var tickerObserver = tickerCursor.observe({
@@ -79,10 +78,7 @@ if (Meteor.isClient) {
 		            }
 		        });
 		    initializingTicker = false;
-		    
-		    
 			var settingsCursor = SystemSettings.find({});
-			
 			var initializingSettings = true;
 			var settingsOberver = settingsCursor.observe({
 	            changed: function(newSettingsItem, oldSettingsItem){
@@ -93,50 +89,25 @@ if (Meteor.isClient) {
 		    initializingSettings = false;
 		    
 		    
-
+		    emoji = new EmojiTimesTwo(3000, 80, 100, 3);
+		    scene.add(emoji);
 		    
-		    // CREATE CUBES
-		    var cubeGeo = new THREE.BoxGeometry(40,40,40);
-		    for (var i=-sceneWidth/2; i<=sceneWidth/2; i+=sceneWidth/10){
-		        var thisColor = new THREE.Color();
-		        thisColor.setRGB( 0,1,1 );
-		        var thisMat = new THREE.MeshLambertMaterial( {color:thisColor} );
-		        var thisCube = new THREE.Mesh(cubeGeo, thisMat);
-		        thisCube.position.x = i;
-		        cubes.push(thisCube);
-		        scene.add(thisCube);
-		    }
-		    numCubes = cubes.length;
+		    
+		    setInterval( function(){
+    		    emoji.setEmoji(Math.round(Math.random() * 100 + 1), 'happy');
+		    }, 2000);
+		    
+            animate();
 	    });
 	    
 	    
-		    	
-		var ci;
-		var numCubes;
+
 		function animate() {
-			for (ci=0; ci<numCubes; ci++) {
-				cubes[ci].position.x += 1;
-				cubes[ci].rotation.y += .01;
-				cubes[ci].rotation.x += .01;
-				if (cubes[ci].position.x > sceneWidth/2){
-					cubes[ci].position.x = -sceneWidth/2;
-				}
-				if (cubes[ci].rotation.x > Math.PI*2){
-					cubes[ci].rotation.x = 0;
-				}
-				if (cubes[ci].rotation.y > Math.PI*2){
-					cubes[ci].rotation.y = 0;
-				}
-			}
 			ticker.update();
 			render();
 			requestAnimationFrame( animate );
 		}
-		function setCamZ(offset){
-			for (var i=0; i< views.length; i++){
-				views[i].camera.position.z += offset;
-			}
-		}
+
 		var ri, left, bottom, width, height;
 		var numViews = views.length;
 		
@@ -175,7 +146,7 @@ if (Meteor.isClient) {
 			light.position.set( 0, 500, 2000 );
 			scene.add( light );
 			
-			renderer = new THREE.WebGLRenderer( { antialias:true, alpha:true } );
+			renderer = new THREE.WebGLRenderer( { antialias:true} );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.appendChild( renderer.domElement );
 		}

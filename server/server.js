@@ -15,38 +15,34 @@ Meteor.startup( function(){
             id = '0' + id;
         }
         if (!Connections.findOne({deviceid:id})){
-            Connections.insert({deviceid:id});
+            Connections.insert({deviceid:id, emoji:'neutral'});
         }
     }
-	
 	var baseSettings = ['activeQuestion', 'ipadUpper'];
 	for (i=0; i<baseSettings.length; i++){
     	if (!SystemSettings.findOne({name:baseSettings[i]})){
         	SystemSettings.insert({name:baseSettings[i], value:''});
         }    	
 	}
-
 	
-
-
+	if (!SystemSettings.findOne({name:'emojis'})) {
+    	SystemSettings.insert({name:'emojis', 'value':['happy', 'sad', 'neutral']});
+	}
+	
 });
 
 if (Meteor.isServer) {
-
-
 	Meteor.methods({
 	  	heartbeat: function (deviceid) {
 		  	if (deviceid === null){
 			  	return;
 		  	}
-		  	console.log(deviceid);
 		    if (!Connections.findOne({deviceid:deviceid})) {
 		    	Connections.insert({deviceid:deviceid});
 		    }
 		    Connections.update({deviceid:deviceid}, {$set: {last_seen: (new Date()).getTime(), status:'connected'}});
 	  	}
 	});
-	
 	Meteor.setInterval(function () {
 	  var now = (new Date()).getTime();
 	  Connections.find({last_seen: {$lt: (now - 60 * 1000)}}).forEach(function (user) {
@@ -54,6 +50,5 @@ if (Meteor.isServer) {
 	    		Connections.update({deviceid:user.deviceid}, {$set: {status:'disconnected'}});
 	    	}
 	  });
-	}, 5000);
-	
+	}, 5000);	
 }

@@ -60,12 +60,13 @@ if (Meteor.isClient) {
 	});
 	Router.route('/wall', {
 	    onBeforeAction: function(){
+	        var libsLoaded = false;
 			var threejs = IRLibLoader.load('/js/three.js', {
 				success: function(){ },
 				error: function(){ }
 			});
-			if(threejs.ready()){
-				
+			if(threejs.ready() && !libsLoaded){
+			    libsLoaded = true;
 				var a = IRLibLoader.load('/js/html2canvas.js', {
 					success: function(){ },
 					error: function(){ }
@@ -90,8 +91,20 @@ if (Meteor.isClient) {
 					success: function(){ },
 					error: function(){  }
 				});
+				var g = IRLibLoader.load('http://0.0.0.0:3000/js/Emojis.js', {
+					success: function(){ },
+					error: function(){ }
+				});
+				var h = IRLibLoader.load('http://0.0.0.0:3000/js/Emoji.js', {
+					success: function(){},
+					error: function(){  }
+				});
+				var i = IRLibLoader.load('/js/OBJLoader.js', {
+					success: function(){ },
+					error: function(){  }
+				});
 				
-				if(a.ready() & b.ready() & c.ready() & d.ready() & e.ready() & f.ready() ){
+				if(a.ready() & b.ready() & c.ready() & d.ready() & e.ready() & f.ready() && g.ready() && h.ready() && i.ready() ){
 					this.next();
 				}
 			}

@@ -16,6 +16,17 @@ if (Meteor.isClient){
 		},
 		"click .filter": function(event, template){
 			Session.set('filter', event.target.name);
+		},
+		'change .emojiSelect': function(event, template) {
+		    var id = event.target.name.split('_')[1];
+		    var thisConnection = Connections.findOne({deviceid:id});
+		    Connections.update( thisConnection._id, {emoji:event.target.value} );
+    	}
+	});
+	
+	Template.device.helpers({
+		emojis: function(){
+		    return SystemSettings.findOne({name:'emojis'}).value;
 		}
 	});
 
