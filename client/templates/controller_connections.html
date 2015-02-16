@@ -14,8 +14,8 @@
 			  <tr>
 				  <th width=10%>Device ID</th>
 				  <th width=10%>Status</th>
-				  <th width=70%>Emoji</th>
-				  <th width=10%>Delete</th>
+				  <th width=60%>Emoji</th>
+				  <th width=20%>View</th>
 			  </tr>
 		  </thead>
 		  <tbody>
@@ -26,22 +26,51 @@
 	    </table>
 
 	</div>
+	
+	
+
+	<div id='fadeout' class="{{singleViewVisible}}">
+	</div>
+	<div id='questionForm' class="{{singleViewVisible}}">
+	 	<button type="button" id='closeView' class="btn btn-default btn-lg closeBtn">
+	  		X
+	  	</button>
+			
+		<h1>iPad {{ipadInfo.deviceid}}</h1>
+		<table class='table table-striped table-bordered'>
+		    <tr>
+		        <td>Last seen</td>
+		        <td>{{ipadInfo.last_seen}}</td>
+		    </tr>
+		    <tr>
+		        <td>Emoji</td>
+		        <td>{{ipadInfo.emoji}}</td>
+		    </tr>
+		    {{#each ipadInfo.answers}}
+		        {{> answer}}
+		    {{/each}}
+		</table>
+		        
+	</div>
 </template>
+<template name='answer'>
+    <tr>
+        <td>{{questionInfo answer.questionID 'questionText'}}</td>
+        <td>{{answer.answer}}</td>
+    </tr>
+</template>
+
+
 <template name="device">
   	<tr>
 	  <td>{{deviceid}}</td>
 	  <td>{{toUpperCase status}}</td>
+	  <td>{{emoji}}</td>
 	  <td>
-            <select class="emojiSelect" id="" name="emoji_{{deviceid}}">
-                {{#each emojis}}
-                    <option value="{{this}}">{{this}}</option>
-                {{/each}}
-            </select>
-	  </td>
-	  <td>
-	  		<button type="button" name={{_id}} class="btn btn-default btn-lg deleteConnectedDevice">
-		  		X
+	  		<button type="button" name={{_id}} class="btn btn-default btn-lg viewConnectedDevice">
+		  		VIEW
 		  	</button>
 	  </td>
+
    </tr>
 </template>

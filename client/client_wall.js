@@ -58,7 +58,9 @@ if (Meteor.isClient) {
 			ticker = new Ticker( sceneWidth, tickerCursor.fetch() );
 			ticker.position.y = -80;
 			scene.add(ticker);
-			
+
+		    emoji = new EmojiTimesTwo(3000, 80, 100, 3);
+		    scene.add(emoji);			
 			
 			var initializingTicker = true;
 			var tickerObserver = tickerCursor.observe({
@@ -78,6 +80,7 @@ if (Meteor.isClient) {
 		            }
 		        });
 		    initializingTicker = false;
+		    
 			var settingsCursor = SystemSettings.find({});
 			var initializingSettings = true;
 			var settingsOberver = settingsCursor.observe({
@@ -88,14 +91,22 @@ if (Meteor.isClient) {
 		    });
 		    initializingSettings = false;
 		    
+            var connectionsCursor = Connections.find({type:'ipad'});
+			var connectionsObserver = connectionsCursor.observe({
+	            changed: function(newConnection, oldConnection){
+	                console.log(newConnection);
+	                if (newConnection.emoji != oldConnection.emoji){
+					    updateConnections(newConnection);
+					}
+	            },
+		    });
+	    
+
 		    
-		    emoji = new EmojiTimesTwo(3000, 80, 100, 3);
-		    scene.add(emoji);
 		    
-		    
-		    setInterval( function(){
-    		    emoji.setEmoji(Math.round(Math.random() * 100 + 1), 'happy');
-		    }, 2000);
+		    //setInterval( function(){
+    		//    emoji.setEmoji(Math.round(Math.random() * 100 + 1), 'happy');
+		    //}, 2000);
 		    
             animate();
 	    });
@@ -160,6 +171,11 @@ if (Meteor.isClient) {
 						ticker.turnOff();
 					}
 			}
+		}
+		
+		function updateConnections(newConnection){
+    		var emojiId = parseInt(newConnection.deviceid);
+    		emoji.setEmoji(emojiId, newConnection.emoji);
 		}
 		    
 		    

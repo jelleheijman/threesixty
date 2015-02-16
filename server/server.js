@@ -15,13 +15,13 @@ Meteor.startup( function(){
             id = '0' + id;
         }
         if (!Connections.findOne({deviceid:id})){
-            Connections.insert({deviceid:id, emoji:'neutral'});
+            Connections.insert({deviceid:id, type:'ipad', answers:[], emoji:'neutral'});
         }
     }
-	var baseSettings = ['activeQuestion', 'ipadUpper'];
+	var baseSettings = [{name:'activeQuestion', def:''}, {name:'ipadUpper', def:'standby'}];
 	for (i=0; i<baseSettings.length; i++){
     	if (!SystemSettings.findOne({name:baseSettings[i]})){
-        	SystemSettings.insert({name:baseSettings[i], value:''});
+        	SystemSettings.insert({name:baseSettings[i].name, value:baseSettings[i].def});
         }    	
 	}
 	

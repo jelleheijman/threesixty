@@ -6,7 +6,17 @@ if (Meteor.isClient){
 		  } else {
 			  	return Connections.find({deviceid:{$not:/^[0-9]+$/}}, {sort:{deviceid:1}});
 		  }
-		}
+		},
+        singleViewVisible:function(){
+            if (Session.get('activeDevice')){
+                return "visible";
+            } else {
+                return "hidden";
+            }
+        },
+        ipadInfo:function(){
+            return Connections.findOne(Session.get('activeDevice'));
+        }
 	});
 	Template.controllerDeviceConnections.events({
 		"click .deleteConnectedDevice": function (event, template) {
@@ -21,13 +31,17 @@ if (Meteor.isClient){
 		    var id = event.target.name.split('_')[1];
 		    var thisConnection = Connections.findOne({deviceid:id});
 		    Connections.update( thisConnection._id, {emoji:event.target.value} );
+    	},
+    	'click .viewConnectedDevice': function(event, template){
+        	Session.set('activeDevice', event.target.name);
+    	},
+    	'click #closeView':function (event, template){
+        	Session.set('activeDevice', undefined);
     	}
 	});
 	
 	Template.device.helpers({
-		emojis: function(){
-		    return SystemSettings.findOne({name:'emojis'}).value;
-		}
+
 	});
 
 }

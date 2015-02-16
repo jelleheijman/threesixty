@@ -54,7 +54,7 @@ canvas {
 	z-index:100;
 	padding:5%;
 }
-#closeQuestion{
+.closeBtn{
 	position:absolute;
 	right:1%;
 	top:3%;
@@ -66,8 +66,10 @@ canvas {
 .hiddenFade {
 	transition: opacity 0.7s;
 	opacity:0;
+	pointer-events:none;
 }
 .visibleFade{
     transition: opacity 0.7s;
     opacity:1;
+    pointer-events: inherit;
 }
