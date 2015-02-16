@@ -62,47 +62,54 @@ if (Meteor.isClient) {
 		    emoji = new EmojiTimesTwo(3000, 80, 100, 3);
 		    scene.add(emoji);			
 			
-			var initializingTicker = true;
-			var tickerObserver = tickerCursor.observe({
-		            addedAt: function(tickerItem, index, before){
-			            if (!initializingTicker){
-			            	ticker.addItem(tickerItem);
+			setTimeout( function(){
+				var initializingTicker = true;
+				var tickerObserver = tickerCursor.observe({
+			            addedAt: function(tickerItem, index, before){
+				            if (!initializingTicker){
+				            	ticker.addItem(tickerItem);
+				            }
+			            },
+			            changedAt: function(newTickerItem, oldTickerItem, index){
+	
+			            },
+			            removedAt: function (oldTickerItem, index) {
+							//console.log(oldTickerItem);
+			            },
+			            movedTo: function(tickerItem, fromIndex, toIndex, before) {
+				            //console.log(tickerItem);
 			            }
+			        });
+			    initializingTicker = false;
+			    
+				var settingsCursor = SystemSettings.find({});
+				var initializingSettings = true;
+				var settingsOberver = settingsCursor.observe({
+		            changed: function(newSettingsItem, oldSettingsItem){
+						updateSettings(newSettingsItem);
 		            },
-		            changedAt: function(newTickerItem, oldTickerItem, index){
-
+	
+			    });
+			    initializingSettings = false;
+			    
+	            var connectionsCursor = Connections.find({type:'ipad'});
+				var connectionsObserver = connectionsCursor.observe({
+					added: function(newConnection){
+						updateConnections(newConnection);
+					},
+		            changed: function(newConnection, oldConnection){   
+		                if (newConnection.emoji != oldConnection.emoji){
+						    updateConnections(newConnection);
+						}
 		            },
-		            removedAt: function (oldTickerItem, index) {
-						//console.log(oldTickerItem);
-		            },
-		            movedTo: function(tickerItem, fromIndex, toIndex, before) {
-			            //console.log(tickerItem);
-		            }
-		        });
-		    initializingTicker = false;
-		    
-			var settingsCursor = SystemSettings.find({});
-			var initializingSettings = true;
-			var settingsOberver = settingsCursor.observe({
-	            changed: function(newSettingsItem, oldSettingsItem){
-					updateSettings(newSettingsItem);
-	            },
+			    });
+		    }, 4000);
 
-		    });
-		    initializingSettings = false;
-		    
-            var connectionsCursor = Connections.find({type:'ipad'});
-			var connectionsObserver = connectionsCursor.observe({
-	            changed: function(newConnection, oldConnection){
-	                console.log(newConnection);
-	                if (newConnection.emoji != oldConnection.emoji){
-					    updateConnections(newConnection);
-					}
-	            },
-		    });
-	    
-
-		    
+		    var bkgGeom = new THREE.PlaneGeometry(6000, 200);
+		    var bkgMat = new THREE.MeshBasicMaterial({map:THREE.ImageUtils.loadTexture('/img/wall_bkg.jpg')});
+		    var bkg = new THREE.Mesh(bkgGeom, bkgMat);
+		    bkg.position.z = -10;
+		    scene.add(bkg);
 		    
 		    //setInterval( function(){
     		//    emoji.setEmoji(Math.round(Math.random() * 100 + 1), 'happy');
@@ -153,8 +160,8 @@ if (Meteor.isClient) {
 			scene = new THREE.Scene();		
 			scene.add( new THREE.AmbientLight( 0x505050 ) );
 		
-			var light = new THREE.PointLight( 0xffffff, 1.5, 6000 );
-			light.position.set( 0, 500, 2000 );
+			var light = new THREE.PointLight( 0xffffff, 1.5, 17000 );
+			light.position.set( 0, 500, 10000 );
 			scene.add( light );
 			
 			renderer = new THREE.WebGLRenderer( { antialias:true} );
