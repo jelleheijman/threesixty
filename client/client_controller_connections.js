@@ -16,6 +16,11 @@ if (Meteor.isClient){
         },
         ipadInfo:function(){
             return Connections.findOne(Session.get('activeDevice'));
+        },
+        formatTime:function(thenDate){
+	        if (thenDate) {
+		        return new Date(thenDate).toTimeString();
+		    }
         }
 	});
 	Template.controllerDeviceConnections.events({
@@ -41,7 +46,9 @@ if (Meteor.isClient){
 	});
 	
 	Template.device.helpers({
-
+		'statusClass':function(){
+			return this.status === 'connected' ? 'connected' : 'disconnected';
+		}
 	});
 
 }

@@ -15,25 +15,28 @@ if (Meteor.isClient) {
 			return questions;
 		},
 		questionData:function(key){
-		    if (Session.get('editQuestion')){
-    		    return Session.get('editQuestion')[key];
-    		} else {
-        		return null;
-    		}
+			return Session.get('editQuestion') ? Session.get('editQuestion')[key] : null;		
+		    //if (Session.get('editQuestion')){
+    		//    return Session.get('editQuestion')[key];
+    		//} else {
+        	//	return null;
+    		//}
 		},
 		questionFormHeader: function(){
-			if (Session.get('activeQuestion')){
-				return "EDIT QUESTION";
-			} else {
-				return "ADD QUESTION";
-			}
+			return Session.get('activeQuestion') ? "EDIT QUESTION" : "ADD QUESTION";		
+			//if (Session.get('activeQuestion')){
+			//	return "EDIT QUESTION";
+			//} else {
+			//	return "ADD QUESTION";
+			//}
 		},
 		questionFormVisible: function(){
-    		if (Session.get('editQuestion')){
-        		return '';
-    		} else {
-        		return 'hidden';
-    		}
+			return Session.get('editQuestion') ? '' : 'hidden';		
+    		//if (Session.get('editQuestion')){
+        	//	return '';
+    		//} else {
+        	//	return 'hidden';
+    		//}
 		}
 	});
 	Template.controllerQuestions.events({

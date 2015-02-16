@@ -40,6 +40,19 @@
 	
 }
 
+.emojiButton{
+	margin:0 10px;
+	height:90%;
+}
+
+.emojiButton.active {
+	
+}
+
+.emojiButton.inactive {
+	opacity:.5;
+}
+
 #question h1{
 	margin:20px;
 }
@@ -47,5 +60,12 @@
 #question h2{
 	color:white;
 	padding:20px;
+	border-radius:5px;
+}
+.answer.selected {
 	background-color:green;
 }
+.answer.unselected {
+	background-color:rgba(95, 95, 95, 1);
+}
+

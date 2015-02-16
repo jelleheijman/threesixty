@@ -20,13 +20,13 @@ Meteor.startup( function(){
     }
 	var baseSettings = [{name:'activeQuestion', def:''}, {name:'ipadUpper', def:'standby'}];
 	for (i=0; i<baseSettings.length; i++){
-    	if (!SystemSettings.findOne({name:baseSettings[i]})){
+    	if (!SystemSettings.findOne({name:baseSettings[i].name})){
         	SystemSettings.insert({name:baseSettings[i].name, value:baseSettings[i].def});
         }    	
 	}
 	
 	if (!SystemSettings.findOne({name:'emojis'})) {
-    	SystemSettings.insert({name:'emojis', 'value':['happy', 'sad', 'neutral']});
+    	SystemSettings.insert({name:'emojis', 'value':['happy', 'eyeRoll', 'neutral']});
 	}
 	
 });
@@ -41,6 +41,18 @@ if (Meteor.isServer) {
 		    	Connections.insert({deviceid:deviceid});
 		    }
 		    Connections.update({deviceid:deviceid}, {$set: {last_seen: (new Date()).getTime(), status:'connected'}});
+	  	},
+	  	answerQuestion:function(deviceid, question, answer){
+            Connections.update( {_id:deviceid, "answers.question" : question}, {$set:{'answers.$.answer': answer}} );
+		  	console.log(answer);
+	  		Connections.update( {_id:deviceid, "answers.question" : {$ne:question}} ,
+								{$addToSet : {"answers": {'question':question, 'answer':answer  }} }
+							  );
+							  
+							  
+
+							  
+							  
 	  	}
 	});
 	Meteor.setInterval(function () {

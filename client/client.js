@@ -117,6 +117,11 @@ if (Meteor.isClient) {
 	Router.route('/i/:id', function(){
 		Session.set('deviceid', this.params.id);
 		this.render('ipad');
+		setTimeout(function(){
+		    if (!Session.get('mongo_id')){
+		        Session.set('mongo_id', Connections.findOne({deviceid:Session.get('deviceid')})._id);
+		    }
+		}, 2000);
 	});
 
 	Meteor.setInterval(function () {

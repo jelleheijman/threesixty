@@ -5,15 +5,15 @@
 		
 		</div>
 		
-		<div class='section upper {{ipadTopVisible "question"}}' id='question'>
+		<div class='section upper {{ipadTopVisible "question"}}' id='question' name='{{activeQuestion "_id"}}'>
 			
 			<h1>{{activeQuestion 'questionText'}}</h1>
-			<h2 class="{{answerVisible 'answer1'}}">{{activeQuestion 'answer1'}}</h2>
-			<h2 class="{{answerVisible 'answer2'}}">{{activeQuestion 'answer2'}}</h2>
-			<h2 class="{{answerVisible 'answer3'}}">{{activeQuestion 'answer3'}}</h2>
-			<h2 class="{{answerVisible 'answer4'}}">{{activeQuestion 'answer4'}}</h2>
-			<h2 class="{{answerVisible 'answer5'}}">{{activeQuestion 'answer5'}}</h2>
-			<h2 class="{{answerVisible 'answer6'}}">{{activeQuestion 'answer6'}}</h2>
+			<h2 class="answer {{answerVisible 'answer1'}} {{answerActive '1'}}" name='1'>{{activeQuestion 'answer1'}}</h2>
+			<h2 class="answer {{answerVisible 'answer2'}} {{answerActive '2'}}" name='2'>{{activeQuestion 'answer2'}}</h2>
+			<h2 class="answer {{answerVisible 'answer3'}} {{answerActive '3'}}" name='3'>{{activeQuestion 'answer3'}}</h2>
+			<h2 class="answer {{answerVisible 'answer4'}} {{answerActive '4'}}" name='4'>{{activeQuestion 'answer4'}}</h2>
+			<h2 class="answer {{answerVisible 'answer5'}} {{answerActive '5'}}" name='5'>{{activeQuestion 'answer5'}}</h2>
+			<h2 class="answer {{answerVisible 'answer6'}} {{answerActive '6'}}" name='6'>{{activeQuestion 'answer6'}}</h2>
 		</div>
 		
 		<div class='section upper {{ipadTopVisible "standby"}}' id='standby'>
@@ -23,10 +23,9 @@
 		
 		
 		<div class='section bottom {{ipadLowerVisible 'emoji'}}' id='emoji'>
-			<button class='btn btn-large happy' name='happy'>HAPPY</button>
-			<button class='btn btn-large sad' name='sad'>SAD</button>
-			<button class='btn btn-large angry' name='angry'>ANGRY</button>
-			<button class='btn btn-large eyeroll' name='eyeroll'>EYE ROLL</button>
+			{{ #each emojis }}
+				{{> emojiButton}}
+			{{ /each }}			
 		</div>
 		
 		<div class='section bottom {{ipadLowerVisible 'message'}}' id='message'>
@@ -38,4 +37,8 @@
 			</form>
 		</div>
 	</div>
+</template>
+
+<template name='emojiButton'>
+	<img class='emojiButton {{emojiActive this}}' src='/img/emoji/{{this}}.png' name='{{this}}'>
 </template>

@@ -34,7 +34,7 @@ canvas {
 }
 
 #fadeout{
-	position:absolute;
+	position:fixed;
 	left:0;
 	top:0;
 	width:100%;
@@ -45,7 +45,7 @@ canvas {
 
 #questionForm{
 	background-color:white;
-	position:absolute;
+	position:fixed;
 	width:70%;
 	height:70%;
 	left:10%;
@@ -72,4 +72,12 @@ canvas {
     transition: opacity 0.7s;
     opacity:1;
     pointer-events: inherit;
+}
+table.table-striped tr td.connected{
+	color:white;
+	background-color:#00AA00;
+}
+table.table-striped tr td.disconnected{
+	color:white;
+	background-color:#AA0000;
 }
