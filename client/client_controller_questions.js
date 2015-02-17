@@ -14,29 +14,46 @@ if (Meteor.isClient) {
 			}
 			return questions;
 		},
-		questionData:function(key){
-			return Session.get('editQuestion') ? Session.get('editQuestion')[key] : null;		
-		    //if (Session.get('editQuestion')){
-    		//    return Session.get('editQuestion')[key];
-    		//} else {
-        	//	return null;
-    		//}
+		questionData:function(key, which){
+			return Session.get(which) ? Session.get(which)[key] : null;		
 		},
 		questionFormHeader: function(){
-			return Session.get('activeQuestion') ? "EDIT QUESTION" : "ADD QUESTION";		
-			//if (Session.get('activeQuestion')){
-			//	return "EDIT QUESTION";
-			//} else {
-			//	return "ADD QUESTION";
-			//}
+			return Session.get('editQuestion') ? "EDIT QUESTION" : "ADD QUESTION";		
 		},
 		questionFormVisible: function(){
 			return Session.get('editQuestion') ? '' : 'hidden';		
-    		//if (Session.get('editQuestion')){
-        	//	return '';
-    		//} else {
-        	//	return 'hidden';
-    		//}
+		},
+		questionViewVisible: function(){
+			return Session.get('viewQuestion') ? '' : 'hidden';		
+		},
+		fadeoutVisible: function(){
+    		return Session.get('editQuestion') || Session.get('viewQuestion') ? '' : 'hidden';
+		},
+		answerVisible: function(answer){
+		    console.log(Session.get('viewQuestion')[answer]);
+    		return Session.get('viewQuestion')[answer].length > 0 ? '' : 'hidden';
+		},
+		answerPercent: function(answer){
+            var ipads = Connections.find({type:'ipad'}).fetch();
+            var votesForThisAnswer = 0;
+            var total = 0;
+            for (var i=0; i<ipads.length; i++){
+                for (var j=0; j<ipads[i].answers.length; j++){
+                    if (ipads[i].answers[j].question == Session.get('viewQuestion')._id){
+                        
+                        var thisAnswer = ipads[i].answers[j].answer;
+                        if (thisAnswer){
+                            total++;
+                        }
+                        if (thisAnswer == answer){
+                            votesForThisAnswer++;
+                        }
+                    }
+                }
+            }
+            if (total > 0){
+                return (votesForThisAnswer / total * 100).toFixed(1);
+            }   
 		}
 	});
 	Template.controllerQuestions.events({
@@ -71,7 +88,7 @@ if (Meteor.isClient) {
 			event.preventDefault();
 			return false;
 		},
-		'click #closeQuestion':function(event, template){
+		'click .closeButton':function(event, template){
 			$('form [name="questionText"]').val('');
 			$('form [name="answer1"]').val('');
 			$('form [name="answer2"]').val('');
@@ -80,19 +97,26 @@ if (Meteor.isClient) {
 			$('form [name="answer5"]').val('');
 			$('form [name="answer6"]').val('');
 			Session.set('editQuestion', undefined);
-		},
-		'click #addQuestion':function(event, template){
-			Session.set('editQuestion', 'new');
+			Session.set('viewQuestion', undefined);
+		}
+	});
+	
+	Template.question.events({
+ 		'click .viewQuestion':function(event, template){
+			var viewQuestion = Questions.findOne(event.target.name);
+			if (viewQuestion){			
+				Session.set('viewQuestion', viewQuestion);
+			}
 		},
 		'click .editQuestion':function(event, template){
-			var activeQuestion = Questions.findOne(event.target.name);
-			if (activeQuestion){			
-				Session.set('editQuestion', activeQuestion);
+			var editQuestion = Questions.findOne(event.target.name);
+			if (editQuestion){			
+				Session.set('editQuestion', editQuestion);
 			}
 		},
 		'click .deleteQuestion':function(event, template){
 			Questions.remove(event.target.name);
-		},
+		},  
 		'click .setActiveQuestion':function(event, template){
 			var id = SystemSettings.findOne({'name':'activeQuestion'})._id;
 			SystemSettings.update(id, {$set:{value:event.target.name}});

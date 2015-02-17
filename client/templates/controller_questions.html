@@ -1,10 +1,9 @@
 <template name='controllerQuestions'>
 	{{> navigation}}
-
-	<div id='fadeout' class="{{questionFormVisible}}">
+	<div id='fadeout' class="{{fadeoutVisible}}">
 	</div>
-	<div id='questionForm' class="{{questionFormVisible}}">
-	 	<button type="button" id='closeQuestion' class="btn btn-default btn-lg closeBtn">
+	<div id='questionForm' class="popOver {{questionFormVisible}}">
+	 	<button type="button" class="btn btn-default btn-lg closeButton">
 	  		X
 	  	</button>
 			
@@ -13,35 +12,105 @@
 		  <input type='hidden' name='id' value='{{questionID}}'>
 		  <div class="form-group">
 		    <label for="questionText">Question text</label>
-		    <input type="text" class="form-control" name="questionText" size="130" style='width:50%' value='{{questionData 'questionText'}}'>
+		    <input type="text" class="form-control" name="questionText" size="130" style='width:50%' value='{{questionData 'questionText' 'editQuestion'}}'>
 		  </div>
-		  <div class="form-group">
+ 		  <div class="form-group">
 		    <label for="answer1">Answer 1</label>
-		    <input type="text" class="form-control" name="answer1" size="130" style='width:50%' value='{{questionData 'answer1'}}'>
+		    <input type="text" class="form-control" name="answer1" size="130" style='width:50%' value='{{questionData 'answer1' 'editQuestion'}}'>
 		  </div>
 		  <div class="form-group">
 		    <label for="answer2">Answer 2</label>
-		    <input type="text" class="form-control" name="answer2" size="130" style='width:50%' value='{{questionData 'answer2'}}'>
+		    <input type="text" class="form-control" name="answer2" size="130" style='width:50%' value='{{questionData 'answer2' 'editQuestion'}}'>
 		  </div>
 		  <div class="form-group">
 		    <label for="answer3">Answer 3</label>
-		    <input type="text" class="form-control" name="answer3" size="130" style='width:50%' value='{{questionData 'answer3'}}'>
+		    <input type="text" class="form-control" name="answer3" size="130" style='width:50%' value='{{questionData 'answer3' 'editQuestion'}}'>
 		  </div>
 		  <div class="form-group">
 		    <label for="answer4">Answer 4</label>
-		    <input type="text" class="form-control" name="answer4" size="130" style='width:50%' value='{{questionData 'answer4'}}'>
+		    <input type="text" class="form-control" name="answer4" size="130" style='width:50%' value='{{questionData 'answer4' 'editQuestion'}}'>
 		  </div>
 		  <div class="form-group">
 		    <label for="answer5">Answer 5</label>
-		    <input type="text" class="form-control" name="answer5" size="130" style='width:50%' value='{{questionData 'answer5'}}'>
+		    <input type="text" class="form-control" name="answer5" size="130" style='width:50%' value='{{questionData 'answer5' 'editQuestion'}}'>
 		  </div>
 		  <div class="form-group">
 		    <label for="answer6">Answer 6</label>
-		    <input type="text" class="form-control" name="answer6" size="130" style='width:50%' value='{{questionData 'answer6'}}'>
+		    <input type="text" class="form-control" name="answer6" size="130" style='width:50%' value='{{questionData 'answer6' 'editQuestion'}}'>
 		  </div>
 		    <button type="submit" class="btn btn-default">Submit</button>
 		</form>
 	</div>
+
+	<div id='questionView' class="popOver {{questionViewVisible}}">
+	 	<button type="button" class="btn btn-default btn-lg closeButton">
+	  		X
+	  	</button>
+			
+		<h1>{{questionData 'questionText' 'viewQuestion'}}</h1>
+		<table class='table table-bordered'>
+		  <thead>
+		    <th width=20%>Answer</th>
+		    <th width=80%>Percent</th>
+		  </thead>
+		  <tbody>
+    		  <tr class="{{answerVisible 'answer1'}}">
+    		    <td>{{questionData 'answer1' 'viewQuestion'}}</td>
+    		    <td>
+    		        <div style="width:98%">
+        		        <div class='barChartBar' style="width:{{answerPercent '1'}}%">{{answerPercent '1'}}%</div>
+    		        </div>
+    		    </td>
+    		  </tr>
+    		  <tr class="{{answerVisible 'answer2'}}">
+    		    <td>{{questionData 'answer2' 'viewQuestion'}}</td>
+    		    <td>
+    		        <div style="width:98%">
+        		      <div class='barChartBar' style="width:{{answerPercent '2'}}%">{{answerPercent '2'}}%</div>
+    		        </div>
+    		    </td>
+    		  </tr>
+    		  <tr class="{{answerVisible 'answer3'}}">
+    		    <td>{{questionData 'answer3' 'viewQuestion'}}</td>
+    		    <td>
+    		        <div style="width:98%">
+        		        <div class='barChartBar' style="width:{{answerPercent '3'}}%">{{answerPercent '3'}}%</div>
+    		        </div>
+    		    </td>
+    		  </tr>
+    		  <tr class="{{answerVisible 'answer4'}}">
+    		    <td>{{questionData 'answer4' 'viewQuestion'}}</td>
+    		    <td>
+    		        <div style="width:98%">
+        		      <div class='barChartBar' style="width:{{answerPercent '4'}}%">{{answerPercent '4'}}%</div>
+    		        </div>
+    		    </td>
+    		  </tr>
+    		  <tr class="{{answerVisible 'answer5'}}">
+    		    <td>{{questionData 'answer5' 'viewQuestion'}}</td>
+    		    <td>
+    		        <div style="width:98%">
+        		      <div class='barChartBar' style="width:{{answerPercent '5'}}%">{{answerPercent '5'}}%</div>
+    		        </div>
+    		    </td>
+    		  </tr>
+    		  <tr class="{{answerVisible 'answer6'}}">
+    		    <td>{{questionData 'answer6' 'viewQuestion'}}</td>
+    		    <td>
+    		        <div style="width:98%">
+        		     <div class='barChartBar' style="width:{{answerPercent '6'}}%">{{answerPercent '6'}}%</div>
+    		        </div>
+    		    </td>
+    		  </tr>
+		  </tbody>
+		</table>
+	</div>
+	
+	
+	
+	
+	
+
 
 	<div class='controllerBody'>
 		<div class='controllerBody'>
@@ -51,7 +120,7 @@
 			<thead>
 				<tr>
 					<th width=60%>Question</th>
-					<th width=40% colspan=3>Actions</th>
+					<th width=40% colspan=4>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -73,6 +142,11 @@
 		  	{{#if isActive}}
 		  		Q
 		  	{{/if}}
+	  </td>
+	  <td>
+	  		<button type="button" name={{_id}} class="btn btn-default btn-lg viewQuestion">
+		  		VIEW
+		  	</button>
 	  </td>
 	  <td>
 	  		<button type="button" name={{_id}} class="btn btn-default btn-lg editQuestion">

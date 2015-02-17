@@ -43,7 +43,7 @@ canvas {
 	background-color:rgba(0,0,0,.5);
 }
 
-#questionForm{
+.popOver{
 	background-color:white;
 	position:fixed;
 	width:70%;
@@ -54,7 +54,7 @@ canvas {
 	z-index:100;
 	padding:5%;
 }
-.closeBtn{
+.closeButton{
 	position:absolute;
 	right:1%;
 	top:3%;
@@ -72,6 +72,12 @@ canvas {
     transition: opacity 0.7s;
     opacity:1;
     pointer-events: inherit;
+}
+.barChartBar{
+    background-color:green;
+    text-align:right;
+    color:#afafaf;
+    padding:0 10px;
 }
 table.table-striped tr td.connected{
 	color:white;
