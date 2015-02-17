@@ -44,7 +44,6 @@ if (Meteor.isServer) {
 	  	},
 	  	answerQuestion:function(deviceid, question, answer){
             Connections.update( {_id:deviceid, "answers.question" : question}, {$set:{'answers.$.answer': answer}} );
-		  	console.log(answer);
 	  		Connections.update( {_id:deviceid, "answers.question" : {$ne:question}} ,
 								{$addToSet : {"answers": {'question':question, 'answer':answer  }} }
 							  );
