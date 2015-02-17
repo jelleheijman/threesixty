@@ -18,7 +18,7 @@ if (Meteor.isClient) {
 			return Session.get(which) ? Session.get(which)[key] : null;		
 		},
 		questionFormHeader: function(){
-			return Session.get('editQuestion') ? "EDIT QUESTION" : "ADD QUESTION";		
+			return Session.get('editQuestion') != 'new' ? "EDIT QUESTION" : "ADD QUESTION";		
 		},
 		questionFormVisible: function(){
 			return Session.get('editQuestion') ? '' : 'hidden';		
@@ -30,8 +30,9 @@ if (Meteor.isClient) {
     		return Session.get('editQuestion') || Session.get('viewQuestion') ? '' : 'hidden';
 		},
 		answerVisible: function(answer){
-		    console.log(Session.get('viewQuestion')[answer]);
-    		return Session.get('viewQuestion')[answer].length > 0 ? '' : 'hidden';
+		    if (Session.get('viewQuestion')){
+    			return Session.get('viewQuestion')[answer].length > 0 ? '' : 'hidden';
+    		}
 		},
 		answerPercent: function(answer){
             var ipads = Connections.find({type:'ipad'}).fetch();
@@ -57,6 +58,9 @@ if (Meteor.isClient) {
 		}
 	});
 	Template.controllerQuestions.events({
+		'click #addQuestion':function(event, template){
+			Session.set('editQuestion', 'new');
+		},
 		'submit form': function(event, template){
 			if (event.target.questionText.value.length > 5){
 				

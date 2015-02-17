@@ -19,7 +19,7 @@ if (Meteor.isClient) {
 		var sceneStripHeight = sceneStripWidth / stripAspect;
 		var camZ = 16110;
 		
-		var emoji;
+		var emoji, question;
 
 		var views = [
 			{
@@ -51,7 +51,7 @@ if (Meteor.isClient) {
 		$(document).ready( function(){
 		    initScene();
 		    $("body").css('overflow', 'hidden');
-		    $('#forceFontLoad').remove();
+		    $('.forceFontLoad').remove();
 			    
 			var tickerCursor = TickerItems.find({'cyclesRemaining':{$gt:0}});
 			
@@ -60,7 +60,13 @@ if (Meteor.isClient) {
 			scene.add(ticker);
 
 		    emoji = new EmojiTimesTwo(3000, 80, 100, 3);
-		    scene.add(emoji);			
+		    //scene.add(emoji);
+		    question = new QuestionDisplay();
+		    scene.add(question);
+		    
+		    
+		    
+		    
 			
 			setTimeout( function(){
 				var initializingTicker = true;
@@ -108,7 +114,7 @@ if (Meteor.isClient) {
 		    var bkgGeom = new THREE.PlaneGeometry(6000, 200);
 		    var bkgMat = new THREE.MeshBasicMaterial({map:THREE.ImageUtils.loadTexture('/img/wall_bkg.jpg')});
 		    var bkg = new THREE.Mesh(bkgGeom, bkgMat);
-		    bkg.position.z = -10;
+		    bkg.position.z = -50;
 		    scene.add(bkg);
 		    
 		    //setInterval( function(){
@@ -161,10 +167,11 @@ if (Meteor.isClient) {
 			scene.add( new THREE.AmbientLight( 0x505050 ) );
 		
 			var light = new THREE.PointLight( 0xffffff, 1.5, 17000 );
-			light.position.set( 0, 500, 10000 );
+			light.position.set( 0, 3000, 10000 );
 			scene.add( light );
 			
-			renderer = new THREE.WebGLRenderer( { antialias:true} );
+			renderer = new THREE.WebGLRenderer( { antialias:true } );
+			renderer.sortObjects = false;
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.appendChild( renderer.domElement );
 		}
@@ -172,11 +179,15 @@ if (Meteor.isClient) {
 		function updateSettings(newSetting){
 			switch (newSetting.name){
 				case 'tickerStatus':
-					if (newSetting.onOff == 'on' && ticker.active === false){
+					if (newSetting.value == 'on' && ticker.active === false){
 						ticker.turnOn();
-					} else if (newSetting.onOff == 'off' && ticker.active === true){
+					} else if (newSetting.value == 'off' && ticker.active === true){
 						ticker.turnOff();
 					}
+					break;
+				case 'activeQuestion':
+					var newQuestion = Questions.findOne( newSetting.value )
+					question.setQuestion( newQuestion );
 			}
 		}
 		

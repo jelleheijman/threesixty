@@ -18,8 +18,8 @@ var Ticker = function( sceneWidth, initialData ) {
 	    	   'color':'white'
     };	
 	
-	this.addItem = function( tickerItem, now ) {
-		var item = new DomPlane( tickerItem, css, width, itemSpacing );
+	this.addItem = function( itemData, now ) {
+		var item = new DomPlane( itemData, css, width, itemSpacing, 'left' );
 		if (now) {
 			queueItems.unshift( item )
 		} else {
@@ -48,7 +48,7 @@ var Ticker = function( sceneWidth, initialData ) {
 			}
 			var len = displayItems.length;
 			for (var i=0; i<len; i++){
-				displayItems[i].updatePosition(2);
+				displayItems[i].updatePosition(-2);
 				// WHAT TO DO IF A ITEM HAS GONE OFF THE END..
 				if ( displayItems[i].finished ) {
 					that.remove( displayItems[i].mesh );

@@ -1,32 +1,28 @@
-var DomPlane = function( itemData, c, width, spacing ) {
+var DomPlane = function( itemData, c, width, spacing, align ) {
     var that=this;
-    
-    this.id = itemData._id;
-    
-    
+   
     this.html = itemData.text;
     this.css = c;
     
     this.width;
     this.incoming = false;
     this.finished = false;
-    var startX = -width/2;
-    var endX = width/2;
+    var startX = width/2;
+    var endX = -width/2;
     
 	
 	var geo = new THREE.PlaneBufferGeometry(1, 1);
-	var mat = new THREE.MeshLambertMaterial({transparent:true});
+	var mat = new THREE.MeshBasicMaterial({transparent:true, depthWrite:false});
 	var tex;
 	var mesh = new THREE.Mesh(geo, mat);
 	this.mesh = mesh;
 	
-	
 	this.updatePosition = function(offset){
-		if (that.incoming && that.mesh.position.x > startX + that.width/2){
+		if (that.incoming && that.mesh.position.x < startX - that.width/2){
 			that.incoming = false;
 		}
-		if (that.mesh.position.x > endX + that.width/2) {
-			that.finished = true;
+		if (that.mesh.position.x > endX - that.width/2) {
+			//that.finished = true;
 		}
 		that.mesh.position.x += offset;
 	}
@@ -36,8 +32,8 @@ var DomPlane = function( itemData, c, width, spacing ) {
 	}
 	
 	this.render = function(){
-		
 		var domElement = document.createElement( 'div' );
+		domElement.style.padding = '1%';
 		domElement.innerHTML = that.html;
 		var style = '';
 		for ( var key in that.css ){
@@ -56,7 +52,7 @@ var DomPlane = function( itemData, c, width, spacing ) {
 				mat.needsUpdate = true;
 				that.mesh.scale.x = width;
 				that.mesh.scale.y = height;
-				that.mesh.position.x = startX - width/2 - spacing;
+				that.mesh.position.x = startX + width/2 + spacing;
 				setTimeout( function(){document.body.removeChild(domElement);}, 10 );
 				that.width = width;
 			},
@@ -64,8 +60,6 @@ var DomPlane = function( itemData, c, width, spacing ) {
 			height:height
 		});
 	}
-	
 	this.render();
-
 }	
 DomPlane.prototype.constructor = DomPlane;
