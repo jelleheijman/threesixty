@@ -2,9 +2,25 @@ var EmojiTimesTwo = function(width, height, numEmoji, numRows){
     THREE.Object3D.apply(this);
     var that = this;
     var left, right;
+ 
+ 
     this.setEmoji = function(id, mood){
         left.setEmoji(id, mood);
         right.setEmoji(id, mood);
+    }
+    
+    this.hide = function(){
+	    left.hide();
+	    right.hide();
+	    setTimeout(function(){
+		    that.visible = false;
+	    }, 2000);
+	    
+    }
+    this.reveal = function(delay){
+	    left.reveal(delay);
+	    right.reveal(delay);
+	    that.visible = true;
     }
     
     
@@ -39,7 +55,11 @@ var EmojiTimesTwo = function(width, height, numEmoji, numRows){
         right.position.x = 0 + 50;
         right.position.y = left.position.y;
         that.add(right);
+        
+        that.hide();
     }
+    
+    
     
     
 }
@@ -92,6 +112,17 @@ var Emojis = function( width, height, numEmoji, numRows, emojiBackerGeom, emojiG
 	    if(emojis[id]){
         	emojis[id].setEmoji(emojiMats[mood]);
         }
+    }
+    
+    this.hide = function(){
+	    for (var i=1; i<emojis.length; i++){
+		    emojis[i].hide(i*.005);
+	    }
+    }
+    this.reveal = function(delay){
+	    for (var i=1; i<emojis.length; i++){
+		    emojis[i].reveal(i*.005 + delay);
+	    }
     }
 
 

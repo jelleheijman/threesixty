@@ -1,63 +1,89 @@
-var QuestionDisplay = function( ) {
+var QuestionDisplay = function( flare ) {
     THREE.Object3D.apply(this);
 	var that = this;
-	var questionBox;
-	var scale = 70;
-	
-	var positions = {
-		2:[
-			new THREE.Vector2(-150, 30), new THREE.Vector2(150, -30)	
-		   ],
 
-		6:[
-				{position: new THREE.Vector2(-400, -10), align:'left'},
-				{position: new THREE.Vector2(0, -10), align:'center'},
-				{position: new THREE.Vector2(400, -10), align:'right'},
-				{position: new THREE.Vector2(-400, -50), align:'left'},
-				{position: new THREE.Vector2(0, -50), align:'center'},
-				{position: new THREE.Vector2(400, -50), align:'center'}
-			]
-	}
+	this.mode;
+
+	var answerBox = new AnswerBox();
+	this.add(answerBox);
+
+
+
+	var questionFontSize = 50;
+	var sideQuestionScale = .3;
+	var questionLeftPos = -2900;
+	var questionRightPos = 2900;
+	var questionLeftOff = -3500;
+	var questionRightOff = 3500;
 	
-    var questionCss = {'display':'inline-block',
-	    	   'fontSize':'35px',
-	    	   'fontFamily':'SwissBlack',
-	    	   'color':'white',
-	    	   'fontWeight':'bolder'
-    };	
-    
+	
+	// CREATE CENTER QUESTION MESH
+	
+	var questionMat = new THREE.MeshLambertMaterial({color:0xFFFFFF});
+	var questionMesh = new THREE.Mesh(new THREE.Geometry(), questionMat);
+	var question = new THREE.Object3D();
+	question.visible = false;
+	question.add(questionMesh);
+	this.add(question);
+	
+	// CREATE SIDE QUESTION MESHES
+	var questionMeshLeft = new THREE.Mesh(questionMesh.geometry, questionMat);
+	var questionMeshRight = new THREE.Mesh(questionMesh.geometry, questionMat);
+	questionMeshLeft.scale.set(sideQuestionScale, sideQuestionScale, sideQuestionScale);
+	questionMeshRight.scale.set(sideQuestionScale, sideQuestionScale, sideQuestionScale);
+	var questionLeft = new THREE.Object3D();
+	var questionRight = new THREE.Object3D();
+	questionLeft.add(questionMeshLeft);
+	questionRight.add(questionMeshRight);
+	questionLeft.position.x = questionLeftOff;
+	questionRight.position.y = questionRightOff;
+	this.add(questionLeft);
+	this.add(questionRight);
+
+	
+	// SET UP FLARES
+	var flare1 = new THREE.Mesh(flare.geometry, flare.material);
+	var flare2 = new THREE.Mesh(flare.geometry, flare.material);
+	
+	flare1.position.x = -3500;
+	flare2.position.x = 3500;
+	flare1.position.z = 50;
+	flare2.position.z = 50;
+	this.add(flare1, flare2);
+	
+
     var answerCss = {'display':'inline-block',
 	    	   'fontSize':'25px',
 	    	   'fontFamily':'Swiss',
 	    	   'color':'white'
     };
 
-    var questionData = {text:'INITIAL QUESTION'};
-    
-    var question = new DomPlane(questionData, questionCss, 0, 0, 'center');
-    question.mesh.position.z = 20;
-    question.mesh.position.y = 40;
-    
-    
+
     var answers = [null];
     var answerData = [ {text:'INITIAL ANSWER'}, {text:'INITIAL'}, {text:'INITIAL ANSWER LONGER'}, {text:'ANSWER'}, {text:'INITIAL ANSWER'}, {text:'ANSWER'}, {text:'INITIAL'} ];
     for (var i=0; i<6; i++) {
-	    var thisAnswer = new DomPlane(answerData[i], answerCss, 0, 0, positions[6].align);
-	    answers.push( thisAnswer );
-	    thisAnswer.mesh.position.z = 20;
+	    //var thisAnswer = new DomPlane(answerData[i], answerCss, 0, 0, positions[6].align);
+	    //answers.push( thisAnswer );
+	    //thisAnswer.mesh.position.z = 20;
     }
     
-    setTimeout( function(){
-	    for (i=0; i<6; i++){
-	    	answers[i].mesh.position.x = positions[6][i].position.x;
-			answers[i].mesh.position.y = positions[6][i].position.y;
-	    }
-	}, 4000);
-
 
 	this.setQuestion = function(questionData){
-		question.html = questionData.questionText;
-		question.render();
+		questionMesh.geometry = getText(questionData.questionText);
+		questionMesh.geometry.needsUpdate = true;
+		questionMesh.geometry.computeBoundingBox();		
+		
+		var questionWidth = questionMesh.geometry.boundingBox.max.x - questionMesh.geometry.boundingBox.min.x;
+		var questionHeight = questionMesh.geometry.boundingBox.max.y - questionMesh.geometry.boundingBox.min.y;
+
+		questionMesh.position.x = -questionWidth/2;
+		questionMesh.position.y = -questionHeight/2;
+		
+		questionMeshLeft.geometry = questionMesh.geometry;
+		questionMeshRight.geometry = questionMesh.geometry;
+		
+		questionMeshRight.position.x = - questionWidth * sideQuestionScale;
+		questionMeshLeft.position.x = 0;
 		
 		var answerCount = 0;
 		for (var i=1; i<=6; i++){
@@ -66,23 +92,86 @@ var QuestionDisplay = function( ) {
 			}
 		}
 		for ( i=1; i<=answerCount; i++ ){
-
 		}
+	}
+	
+	this.setMode = function(mode){
+		var dur = 0;
+		if ( that.visible ){
+			dur = .5;
+		}
+		if (mode == 'answer'){
+			TweenLite.to( question.rotation, dur/2, {x:Math.PI*2/4, onComplete:function(){
+				question.visible = false;
+			}} );
+			answerBox.hide(dur/2, dur/2);
+			TweenLite.to( questionLeft.position, dur/2, {x:questionLeftPos});
+			TweenLite.to( questionRight.position, dur/2, {x:questionRightPos});
+		} else if (mode == 'question'){
+			answerBox.reveal( dur/2, 0 );
+			TweenLite.to( question.rotation, dur/2, {x:0, delay:dur/4, onStart:function(){
+				question.visible = true;
+			}});
+			TweenLite.to( questionLeft.position, dur/2, {x:questionLeftOff});
+			TweenLite.to( questionRight.position, dur/2, {x:questionRightOff});			
+		}
+	}
+	
+	this.setQuestion({questionText:'INITIAL QUESTION'});
+
+	this.reveal = function(delay){
+		setTimeout( function(){
+			question.visible = false;
+			that.visible = true;
+			TweenLite.to(flare1.position, .5, {x:0, ease:Linear.easeInOut});
+			TweenLite.to(flare2.position, .5, {x:0, ease:Linear.easeInOut});
+			setTimeout( function(){
+						question.visible = true;
+						TweenLite.from(question.rotation, 1, {x:-Math.PI*2 * .75});
+						flare1.visible = false;
+						//TweenLite.to(flare1.position, .2, {x:-500, y:30, ease:Linear.easeInOut});
+						
+						//TweenLite.to(flare1.scale, .2, {x:2, y:2});
+						TweenLite.to(flare2.scale, .2, {x:10, y:3, onComplete:function(){
+							TweenLite.to(flare2.position, .5, {y:-32, ease:Linear.easeInOut});
+							TweenLite.to(flare2.scale, .5, {x:3, y:.1});
+						}});
+				}, 500);			
+		}, delay*1000);
+	};
+	
+	this.hide = function(){
+		flare1.visible = true;
+		TweenLite.to(flare1.scale, .2, {x:1, y:1, onComplete:function(){
+			question.visible = false;
+		}});
+		TweenLite.to(flare2.scale, .2, {x:1, y:1});
+		TweenLite.to(flare1.position, .5, {x:-3500, y:0});
+		TweenLite.to(flare2.position, .5, {x:3500, y:0, onComplete:function(){
+			that.visible = false;
+			that.setMode('question');
+		}});
+	};
+	
+	this.hide();
+	
+	function getText(text){
+		return new THREE.TextGeometry( text, {
+									size: questionFontSize,
+									height: 3,
+									curveSegments: 3,
+				
+									font: 'swis721 bt',
+									weight: 'bold',
+									//style: 'bold',
+				
+									bevelThickness: 2,
+									bevelSize: 1.3,
+									bevelEnabled: true,	
+								});
 	}
 
 
-	var loader = new THREE.OBJMTLLoader();
-	loader.load( '/models/question_box.obj', '/models/question_box.mtl', function(obj){
-		questionBox = obj.children[0];
-		questionBox.rotation.x = Math.PI*2/4;
-		questionBox.scale.set(scale, scale, scale);
-		that.add(questionBox);
-		that.add(question.mesh);
-		for (var i=1; i<answers.length; i++){
-			that.add(answers[i].mesh);
-		}
-		TweenLite.to(that.rotation, 2, {x:Math.PI*2, delay:2});
-	});
 
 }
 QuestionDisplay.prototype = Object.create(THREE.Object3D.prototype);

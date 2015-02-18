@@ -1,12 +1,19 @@
 <template name='controllerWall'>
 	{{> navigation}}
 		<div class='controllerBody'>
-			<button class='btn btn-large mode' name='question'>Question</button>
-			<button class='btn btn-large mode' name='vote'>Vote</button>
-			<button class='btn btn-large mode' name='results'>Results</button>
-			<button class='btn btn-large mode' name='emoji'>Emoji</button>	
+			<h1>WALL SCENE</h1>
+				<button class='btn btn-large scene {{sceneActive "question"}}' name='question'>Question</button>
+				<button class='btn btn-large scene {{sceneActive "results"}}' name='results'>Results</button>
+				<button class='btn btn-large scene {{sceneActive "emoji"}}' name='emoji'>Emoji</button>	
 		</div>
+		
+		<div class='controllerBody {{modeVisible "question"}}'>
+			<h4>SCENE MODE</h4>
+			<button class='btn btn-large questionMode {{modeActive "question" "question"}}' name='question'>Question</button>	
+			<button class='btn btn-large questionMode {{modeActive "question" "answer"}}' name='answer'>Answer</button>	
+		</div>
+		
 		<div class='controllerBody'>
-			<button class='btn btn-large mode' id='ticker' name='ticker'>Toggle Ticker</button>	{{tickerStatus}}
+			<button class='btn btn-large {{tickerActive}}' id='ticker' name='ticker'>Ticker {{tickerText}}</button>
 		</div>
 </template>

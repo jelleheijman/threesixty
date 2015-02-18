@@ -29,10 +29,19 @@ var Emoji = function( id, backerGeom, backerMat, emojiGeom, emojiMat, positions 
         TweenLite.to( that.scale, .3, {x:scale*1.5, y:scale*1.5, z:scale*1.5, onComplete:function(){
              TweenLite.to( that.scale, .3, {x:scale, y:scale, z:scale} );
         }} );
-
     };
-
-
+    
+    this.hide = function(delay){
+	    TweenLite.to(that.rotation, .3, {z:Math.PI*2/4, delay:delay, onComplete:function(){
+		    that.visible = false;
+	    }});
+    }
+    this.reveal = function(delay){
+	    that.rotation.z = Math.PI*2/4;
+	    TweenLite.to(that.rotation, .3, {z:0, delay:delay, onStart:function(){
+		    that.visible = true;
+	    }});
+    }
 }
 Emoji.prototype = Object.create(THREE.Object3D.prototype);
 Emoji.prototype.constructor = Emoji;

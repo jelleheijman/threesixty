@@ -82,8 +82,10 @@ if (Meteor.isClient) {
 				if (j.ready()){
 					l = IRLibLoader.load('/js/OBJMTLLoader.js');   
 				}
+				var m = IRLibLoader.load('/fonts/swis721_bt_bold.typeface.js');
+				var n = IRLibLoader.load('/js/AnswerBox.js');
 				
-				if(a.ready() & b.ready() & c.ready() & d.ready() & e.ready() & f.ready() && g.ready() && h.ready() && i.ready() && j.ready() && k.ready() && l.ready() ){
+				if(a.ready() & b.ready() & c.ready() & d.ready() & e.ready() & f.ready() && g.ready() && h.ready() && i.ready() && j.ready() && k.ready() && l.ready() && m.ready() && n.ready()){
 					this.next();
 				}
 			}

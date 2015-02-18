@@ -18,8 +18,16 @@ if (Meteor.isClient) {
 		var sceneStripWidth = sceneWidth / numCols / numRows;
 		var sceneStripHeight = sceneStripWidth / stripAspect;
 		var camZ = 16110;
+
+		var flareGeom = new THREE.PlaneBufferGeometry( 500,100 );
+		var flareTex = THREE.ImageUtils.loadTexture('/img/blue_flare.jpg');
+		flareTex.repeat = new THREE.Vector2(.99,.99);
+		flareTex.offset = new THREE.Vector2(.005,0);
+		var flareMat = new THREE.MeshBasicMaterial({map:flareTex, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending});
+		var flare = {geometry:flareGeom, material:flareMat};
+		var scenes = {emoji:undefined, question:undefined};
 		
-		var emoji, question;
+		var settings = {};
 
 		var views = [
 			{
@@ -55,20 +63,29 @@ if (Meteor.isClient) {
 			    
 			var tickerCursor = TickerItems.find({'cyclesRemaining':{$gt:0}});
 			
-			ticker = new Ticker( sceneWidth, tickerCursor.fetch() );
-			ticker.position.y = -80;
-			scene.add(ticker);
 
-		    emoji = new EmojiTimesTwo(3000, 80, 100, 3);
-		    //scene.add(emoji);
-		    question = new QuestionDisplay();
-		    scene.add(question);
 		    
 		    
 		    
 		    
 			
 			setTimeout( function(){
+				ticker = new Ticker( sceneWidth, tickerCursor.fetch() );
+				ticker.position.y = -80;
+				scene.add(ticker);
+	
+			    scenes.emoji = new EmojiTimesTwo(3000, 80, 100, 3);
+			    scene.add(scenes.emoji);
+			    scenes.question = new QuestionDisplay(flare);
+			    var activeSceneSetting = SystemSettings.findOne({name:'activeScene'});
+			    SystemSettings.update( activeSceneSetting._id, {$set: {value:''}} );
+			    var questionModeSetting = SystemSettings.findOne({name:'questionMode'});
+			    SystemSettings.update( questionModeSetting._id, {$set: {value:'question'}} );
+
+			    scene.add(scenes.question);
+		    }, 4000);
+		    
+		    setTimeout( function(){
 				var initializingTicker = true;
 				var tickerObserver = tickerCursor.observe({
 			            addedAt: function(tickerItem, index, before){
@@ -91,8 +108,11 @@ if (Meteor.isClient) {
 				var settingsCursor = SystemSettings.find({});
 				var initializingSettings = true;
 				var settingsOberver = settingsCursor.observe({
+					added: function(settingsItem){
+						initializeSettings(settingsItem);
+					},
 		            changed: function(newSettingsItem, oldSettingsItem){
-						updateSettings(newSettingsItem);
+						updateSettings(newSettingsItem, oldSettingsItem);
 		            },
 	
 			    });
@@ -109,9 +129,10 @@ if (Meteor.isClient) {
 						}
 		            },
 			    });
-		    }, 4000);
+		    }, 6000);
+		    
 
-		    var bkgGeom = new THREE.PlaneGeometry(6000, 200);
+		    var bkgGeom = new THREE.PlaneBufferGeometry(6000, 200);
 		    var bkgMat = new THREE.MeshBasicMaterial({map:THREE.ImageUtils.loadTexture('/img/wall_bkg.jpg')});
 		    var bkg = new THREE.Mesh(bkgGeom, bkgMat);
 		    bkg.position.z = -50;
@@ -127,7 +148,9 @@ if (Meteor.isClient) {
 	    
 
 		function animate() {
-			ticker.update();
+			if (ticker){
+				ticker.update();
+			}
 			render();
 			requestAnimationFrame( animate );
 		}
@@ -176,7 +199,8 @@ if (Meteor.isClient) {
 			container.appendChild( renderer.domElement );
 		}
 		
-		function updateSettings(newSetting){
+		function updateSettings(newSetting, oldSetting){
+			settings[newSetting.name] = newSetting.value;
 			switch (newSetting.name){
 				case 'tickerStatus':
 					if (newSetting.value == 'on' && ticker.active === false){
@@ -186,14 +210,33 @@ if (Meteor.isClient) {
 					}
 					break;
 				case 'activeQuestion':
-					var newQuestion = Questions.findOne( newSetting.value )
-					question.setQuestion( newQuestion );
+					var newQuestion = Questions.findOne( newSetting.value );
+					scenes.question.setQuestion( newQuestion );
+					break;
+				case 'activeScene':
+					if (oldSetting) {
+						if (scenes[oldSetting.value]) {
+							scenes[oldSetting.value].hide();
+						}
+					}
+					if (scenes[newSetting.value]){
+						scenes[newSetting.value].reveal(.5);
+					}
+					break;
+				case 'questionMode':
+					scenes.question.setMode(newSetting.value);
+					break;
 			}
+		}
+		function initializeSettings( setting ) {
+			settings[setting.name] = setting.value;
 		}
 		
 		function updateConnections(newConnection){
     		var emojiId = parseInt(newConnection.deviceid);
-    		emoji.setEmoji(emojiId, newConnection.emoji);
+    		if (scenes.emoji) {
+    			scenes.emoji.setEmoji(emojiId, newConnection.emoji);
+    		}
 		}
 		    
 		    
