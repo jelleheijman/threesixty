@@ -1,14 +1,13 @@
-var DomPlane = function( itemData, c, width, spacing, align ) {
+var DomPlane = function( html, css ) {
     var that=this;
-   
-    this.html = itemData.text;
-    this.css = c;
+    this.html = html
+    this.css = css;
+    this.eventEmitter = document.createElement('div');
     
     this.width;
+    this.height;
     this.incoming = false;
     this.finished = false;
-    var startX = width/2;
-    var endX = -width/2;
     
 	
 	var geo = new THREE.PlaneBufferGeometry(1, 1);
@@ -17,23 +16,15 @@ var DomPlane = function( itemData, c, width, spacing, align ) {
 	var mesh = new THREE.Mesh(geo, mat);
 	this.mesh = mesh;
 	
-	this.updatePosition = function(offset){
-		if (that.incoming && that.mesh.position.x < startX - that.width/2){
-			that.incoming = false;
-		}
-		if (that.mesh.position.x > endX - that.width/2) {
-			//that.finished = true;
-		}
-		that.mesh.position.x += offset;
-	}
-	this.reset = function(){
-		that.mesh.position.x = startX - that.width/2 - spacing;
-		that.finished = false;
+	
+	this.setScale = function(scale){
+		that.mesh.scale.x = that.width * scale;
+		that.mesh.scale.y = that.height * scale;
 	}
 	
 	this.render = function(){
 		var domElement = document.createElement( 'div' );
-		domElement.style.padding = '1%';
+		//domElement.style.padding = '1%';
 		domElement.innerHTML = that.html;
 		var style = '';
 		for ( var key in that.css ){
@@ -41,8 +32,8 @@ var DomPlane = function( itemData, c, width, spacing, align ) {
 		}
 
 		document.body.appendChild(domElement);
-		var width = domElement.offsetWidth;
-		var height = domElement.offsetHeight*1.1;	
+		var width = $(domElement).width();
+		var height = $(domElement).height();	
 		
 		html2canvas(domElement, {
 			onrendered: function(canvas) {
@@ -50,11 +41,13 @@ var DomPlane = function( itemData, c, width, spacing, align ) {
 				tex.needsUpdate = true;
 				mat.map = tex;
 				mat.needsUpdate = true;
-				that.mesh.scale.x = width;
+				that.mesh.scale.x = width
 				that.mesh.scale.y = height;
-				that.mesh.position.x = startX + width/2 + spacing;
-				setTimeout( function(){document.body.removeChild(domElement);}, 10 );
 				that.width = width;
+				that.height = height;
+				that.eventEmitter.dispatchEvent( new Event('ready') );
+				setTimeout( function(){document.body.removeChild(domElement);}, 10 );
+				
 			},
 			width:width,
 			height:height

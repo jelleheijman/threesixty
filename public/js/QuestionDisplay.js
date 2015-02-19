@@ -52,22 +52,6 @@ var QuestionDisplay = function( flare ) {
 	this.add(flare1, flare2);
 	
 
-    var answerCss = {'display':'inline-block',
-	    	   'fontSize':'25px',
-	    	   'fontFamily':'Swiss',
-	    	   'color':'white'
-    };
-
-
-    var answers = [null];
-    var answerData = [ {text:'INITIAL ANSWER'}, {text:'INITIAL'}, {text:'INITIAL ANSWER LONGER'}, {text:'ANSWER'}, {text:'INITIAL ANSWER'}, {text:'ANSWER'}, {text:'INITIAL'} ];
-    for (var i=0; i<6; i++) {
-	    //var thisAnswer = new DomPlane(answerData[i], answerCss, 0, 0, positions[6].align);
-	    //answers.push( thisAnswer );
-	    //thisAnswer.mesh.position.z = 20;
-    }
-    
-
 	this.setQuestion = function(questionData){
 		questionMesh.geometry = getText(questionData.questionText);
 		questionMesh.geometry.needsUpdate = true;
@@ -85,13 +69,15 @@ var QuestionDisplay = function( flare ) {
 		questionMeshRight.position.x = - questionWidth * sideQuestionScale;
 		questionMeshLeft.position.x = 0;
 		
-		var answerCount = 0;
+
+		var answers = [];
 		for (var i=1; i<=6; i++){
-			if (question['answer' + i.toString()]){
-				answerCount++;
+			if (questionData['answer' + i.toString()]){
+				answers.push( questionData['answer' + i.toString()] )
 			}
 		}
-		for ( i=1; i<=answerCount; i++ ){
+		if (answers.length > 1) {
+			answerBox.setAnswers(answers);
 		}
 	}
 	
@@ -105,6 +91,7 @@ var QuestionDisplay = function( flare ) {
 				question.visible = false;
 			}} );
 			answerBox.hide(dur/2, dur/2);
+			
 			TweenLite.to( questionLeft.position, dur/2, {x:questionLeftPos});
 			TweenLite.to( questionRight.position, dur/2, {x:questionRightPos});
 		} else if (mode == 'question'){
@@ -152,6 +139,10 @@ var QuestionDisplay = function( flare ) {
 			that.setMode('question');
 		}});
 	};
+	
+	this.tick = function(){
+		answerBox.tick();
+	}
 	
 	this.hide();
 	

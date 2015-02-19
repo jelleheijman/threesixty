@@ -1,12 +1,14 @@
-var Ticker = function( sceneWidth, initialData ) {
+var Ticker = function( sceneWidth, initialData, active ) {
     THREE.Object3D.apply(this);
+
     
 	var that = this;
-	this.active = true;
+	this.active = active;
 	var width = sceneWidth;
-	var startX = -sceneWidth / 2;
+	var startX = sceneWidth / 2;
+	var endX = -sceneWidth / 2;
 	
-	var itemSpacing = 80;
+	var spacing = 0;
 
 	var allItems = [];
 	var displayItems = [];
@@ -19,7 +21,7 @@ var Ticker = function( sceneWidth, initialData ) {
     };	
 	
 	this.addItem = function( itemData, now ) {
-		var item = new DomPlane( itemData, css, width, itemSpacing, 'left' );
+		var item = new TickerItem( itemData, css, startX, endX, spacing );
 		if (now) {
 			queueItems.unshift( item )
 		} else {
@@ -43,12 +45,12 @@ var Ticker = function( sceneWidth, initialData ) {
 					displayItems.unshift( queueItems[0] );
 					queueItems.shift();
 					displayItems[0].incoming = true;
-					that.add( displayItems[0].mesh );
+					that.add( displayItems[0] );
 				}
 			}
 			var len = displayItems.length;
 			for (var i=0; i<len; i++){
-				displayItems[i].updatePosition(-2);
+				displayItems[i].updatePosition(-5);
 				// WHAT TO DO IF A ITEM HAS GONE OFF THE END..
 				if ( displayItems[i].finished ) {
 					that.remove( displayItems[i].mesh );
@@ -56,7 +58,7 @@ var Ticker = function( sceneWidth, initialData ) {
 					if (queueItems.length == 0){
 						queueItems.push(displayItems[i]);
 					} else {
-						var dbItem = TickerItems.findOne({_id:displayItems[i].id});
+						var dbItem = TickerItems.findOne(displayItems[i].mongoId);
 						var cyclesRemaining = dbItem.cyclesRemaining;
 						cyclesRemaining--;
 						TickerItems.update(dbItem._id, {$set:{cyclesRemaining:cyclesRemaining}});
@@ -70,7 +72,9 @@ var Ticker = function( sceneWidth, initialData ) {
 
 	function init(){
 		for (var i=0; i<initialData.length; i++){
-			that.addItem( initialData[i] );
+			if (initialData[i].cyclesRemaining > 0){
+				that.addItem( initialData[i] );
+			}
 		}
 	}
 	init();
@@ -78,3 +82,36 @@ var Ticker = function( sceneWidth, initialData ) {
 }	
 Ticker.prototype = Object.create(THREE.Object3D.prototype);
 Ticker.prototype.constructor = Ticker;
+
+var TickerItem = function(itemData, css, startX, endX, spacing){
+	THREE.Object3D.apply(this);
+	var that = this;
+	this.mongoId = itemData._id;
+	this.incoming = false;
+	this.finished = false;
+	
+	var plane = new DomPlane( itemData.text, css );
+	this.position.x = startX + spacing;
+	plane.eventEmitter.addEventListener( 'ready', onRendered );
+	this.add(plane.mesh);
+	
+	this.updatePosition = function( offset){
+		if (that.incoming && that.position.x < startX - plane.width - spacing){
+			that.incoming = false;
+		}
+		if (that.position.x < endX - plane.width) {
+			that.finished = true;
+		}
+		that.position.x += offset;
+	}
+	this.reset = function(){
+		that.position.x = startX + spacing;
+		that.finished = false;
+	}	
+	function onRendered(){
+		plane.mesh.position.x = plane.width/2;
+		plane.eventEmitter.removeEventListener( 'ready', onRendered );
+	}
+}
+TickerItem.prototype = Object.create(THREE.Object3D.prototype);
+TickerItem.prototype.constructor = TickerItem;

@@ -70,7 +70,7 @@ if (Meteor.isClient) {
 		    
 			
 			setTimeout( function(){
-				ticker = new Ticker( sceneWidth, tickerCursor.fetch() );
+				ticker = new Ticker( sceneWidth, tickerCursor.fetch(), SystemSettings.findOne({name:'tickerStatus'}).value == 'on' );
 				ticker.position.y = -80;
 				scene.add(ticker);
 	
@@ -150,6 +150,9 @@ if (Meteor.isClient) {
 		function animate() {
 			if (ticker){
 				ticker.update();
+			}
+			if (scenes.question){
+				scenes.question.tick();
 			}
 			render();
 			requestAnimationFrame( animate );
