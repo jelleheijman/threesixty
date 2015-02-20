@@ -8,7 +8,7 @@ var Ticker = function( sceneWidth, initialData, active ) {
 	var startX = sceneWidth / 2;
 	var endX = -sceneWidth / 2;
 	
-	var spacing = 0;
+	var spacing = 10;
 
 	var allItems = [];
 	var displayItems = [];

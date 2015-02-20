@@ -62,13 +62,7 @@ if (Meteor.isClient) {
 		    $('.forceFontLoad').remove();
 			    
 			var tickerCursor = TickerItems.find({'cyclesRemaining':{$gt:0}});
-			
-
-		    
-		    
-		    
-		    
-			
+				
 			setTimeout( function(){
 				ticker = new Ticker( sceneWidth, tickerCursor.fetch(), SystemSettings.findOne({name:'tickerStatus'}).value == 'on' );
 				ticker.position.y = -80;
@@ -129,6 +123,14 @@ if (Meteor.isClient) {
 						}
 		            },
 			    });
+			    
+	            var questionsCursor = Questions.find({});
+				var questionsObserver = questionsCursor.observe({
+		            changed: function(newQuestion, oldQuestion){   
+		                scenes.question.updateQuestion(newQuestion);
+		            },
+			    });
+			    
 		    }, 6000);
 		    
 

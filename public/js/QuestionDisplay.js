@@ -7,8 +7,6 @@ var QuestionDisplay = function( flare ) {
 	var answerBox = new AnswerBox();
 	this.add(answerBox);
 
-
-
 	var questionFontSize = 50;
 	var sideQuestionScale = .3;
 	var questionLeftPos = -2900;
@@ -73,11 +71,20 @@ var QuestionDisplay = function( flare ) {
 		var answers = [];
 		for (var i=1; i<=6; i++){
 			if (questionData['answer' + i.toString()]){
-				answers.push( questionData['answer' + i.toString()] )
+				answers.push( {answer:questionData['answer' + i.toString()], result:questionData['result' + i.toString()]} );
 			}
 		}
 		if (answers.length > 1) {
 			answerBox.setAnswers(answers);
+		}
+	}
+	
+	this.updateQuestion = function(questionData){
+		if (that.visible && answerBox.visible) {
+			var activeQuestion = SystemSettings.findOne({name:'activeQuestion'}).value;
+			if ( questionData._id == activeQuestion ) {
+				answerBox.updateAnswers(questionData);
+			}
 		}
 	}
 	
@@ -137,6 +144,8 @@ var QuestionDisplay = function( flare ) {
 		TweenLite.to(flare2.position, .5, {x:3500, y:0, onComplete:function(){
 			that.visible = false;
 			that.setMode('question');
+			var questionModeSetting = SystemSettings.findOne({name:'questionMode'});
+			SystemSettings.update(questionModeSetting._id, {$set:{value:'question'}});
 		}});
 	};
 	

@@ -75,6 +75,12 @@ if (Meteor.isClient) {
 								};
 				var editQuestion = Session.get('editQuestion');
 				if ( editQuestion == 'new' ){
+					newVals.result1 = {votes:0, percent:0},
+					newVals.result2 = {votes:0, percent:0},
+					newVals.result3 = {votes:0, percent:0},
+					newVals.result4 = {votes:0, percent:0},
+					newVals.result5 = {votes:0, percent:0},
+					newVals.result6 = {votes:0, percent:0},
 				    Questions.insert( newVals );
 				} else {
 					Questions.update( editQuestion._id, {$set:newVals} );

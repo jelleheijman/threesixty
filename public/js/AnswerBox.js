@@ -2,7 +2,6 @@ var AnswerBox = function() {
     THREE.Object3D.apply(this);
 	var that = this;
 	var answerBoxScale = 78;
-
 	
 	var answers = [];
 	var settings = {
@@ -16,7 +15,7 @@ var AnswerBox = function() {
 	function init(){		
 		var yTrack = settings[6].startY;
 		for (var i=0; i<6; i++){
-			var thisAnswer = new Answer( settings[6].scale, settings[6].barSize );
+			var thisAnswer = new Answer( settings[6].scale, settings[6].barSize, i );
 			thisAnswer.position.set(0, yTrack, 20);	
 			yTrack -= settings[6].ySpacing;
 			that.add( thisAnswer );
@@ -38,7 +37,11 @@ var AnswerBox = function() {
 			}
 		}
 	}
-	
+	this.updateAnswers = function( newAnswer ){
+		for (var i=0; i<answers.length; i++){
+			answers[i].updateAnswer( newAnswer['result' + (i+1).toString()] );
+		}
+	}
     
     this.hide = function(dur, delay){
 		TweenLite.to( that.rotation, dur, {x:0, delay:delay, onStart:function(){
@@ -60,7 +63,6 @@ var AnswerBox = function() {
 		    answers[4].tick();
 		    answers[5].tick();		    
 		}
-
     }
     
 	var loader = new THREE.OBJMTLLoader();
@@ -76,31 +78,50 @@ var AnswerBox = function() {
 AnswerBox.prototype = Object.create(THREE.Object3D.prototype);
 AnswerBox.prototype.constructor = AnswerBox;
 
-
 var AnswerQuestion = function() {
     THREE.Object3D.apply(this);
-	var that = this;
-
-    
+	var that = this;    
 }
+
 AnswerQuestion.prototype = Object.create(THREE.Object3D.prototype);
 AnswerQuestion.prototype.constructor = AnswerQuestion;
 
 
-var Answer = function( scale, barSize ) {
+var Answer = function( scale, barSize, iter ) {
 	THREE.Object3D.apply(this);
+	var that = this;
 	var css = {'display':'inline-block',
 	    	   'fontSize':'23px',
 	    	   'fontFamily':'Swiss',
 	    	   'color':'white'
     };
     
-    this.setAnswer = function( answerText, scale, barSize ){
+    this.percent;
+    this.votes;
+    
+    this.setAnswer = function( answerData, scale, barSize ){
+	    answerText = answerData.answer;
+	    that.percent = answerData.result.percent;
+	    that.votes = answerData.result.votes;
 	    plane.html = answerText.toUpperCase();
 	    plane.render();
 	    bar.scale.y = bar.scale.z = barSize;
+	    if (that.percent < .001){
+		    that.percent = .01;
+	    }
+	    bar.scale.x = that.percent;
 	    //plane.setScale(scale);
     }
+    
+    this.updateAnswer = function ( answerData ) {
+	    if (that.percent < .001){
+		    that.percent = .01;
+	    }
+	    that.percent = answerData.percent;
+	    that.votes = answerData.votes;
+    }
+    
+    
     this.setColor = function( answerColor ){
 	    
     }
@@ -117,8 +138,9 @@ var Answer = function( scale, barSize ) {
     this.add(plane.mesh);
     
     var meshWidth = 1500;
-    var barMesh = new THREE.Mesh( new THREE.BoxGeometry(meshWidth, 45, 45), new THREE.MeshPhongMaterial({color:0xFF0000}) );
+    var barMesh = new THREE.Mesh( new THREE.BoxGeometry(meshWidth, 45, 45), new THREE.MeshPhongMaterial({color:0xFF0000, shininess:150}) );
     barMesh.position.x = meshWidth/2;
+    barMesh.rotation.x = .02 * iter;
     var bar = new THREE.Object3D();
     bar.scale.set(1, barSize, barSize);
     bar.position.x = -600;
@@ -129,6 +151,12 @@ var Answer = function( scale, barSize ) {
 	    plane.mesh.position.x = -610 - plane.width/2;
 	    //plane.setScale(scale);
     }
+    
+    setInterval( function(){
+	    if ( bar.scale.x != that.percent ){
+		    TweenLite.to(bar.scale, 1, {x:that.percent});
+	    }
+    }, 1010);
 }
 Answer.prototype = Object.create(THREE.Object3D.prototype);
 Answer.prototype.constructor = Answer;
