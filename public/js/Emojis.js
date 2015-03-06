@@ -31,7 +31,7 @@ var EmojiTimesTwo = function(width, height, numEmoji, numRows){
                      };
     var emojiMats = {
                         happy:new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('/img/emoji/happy.png')}),
-                        eyeRoll:new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('/img/emoji/eyeRoll.png')}),
+                        sad:new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('/img/emoji/sad.png')}),
                         neutral:new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('/img/emoji/neutral.png')})
                     };
     emojiMats.neutral.map

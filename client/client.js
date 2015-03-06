@@ -71,19 +71,19 @@ if (Meteor.isClient) {
 				var b = IRLibLoader.load('/js/ReconnectingWebSocketNew.js');
 				var c = IRLibLoader.load('/js/TweenMax.min.js');
 				var d = IRLibLoader.load('/js/EasePack.min.js');
-				var e = IRLibLoader.load('http://0.0.0.0:3000/js/Ticker.js');
+				var e = IRLibLoader.load('http://john-sanders-imac:3000/js/Ticker.js');
 				var f = IRLibLoader.load('/js/DomPlane.js');
 				var g = IRLibLoader.load('/js/Emojis.js');
 				var h = IRLibLoader.load('/js/Emoji.js');
 				var i = IRLibLoader.load('/js/OBJLoader.js');
 				var j = IRLibLoader.load('/js/MTLLoader.js');
-				var k = IRLibLoader.load('http://0.0.0.0:3000/js/QuestionDisplay.js', {error:function(e){console.log(e);}});
+				var k = IRLibLoader.load('http://john-sanders-imac:3000/js/QuestionDisplay.js', {error:function(e){console.log(e);}});
 				var l;
 				if (j.ready()){
 					l = IRLibLoader.load('/js/OBJMTLLoader.js');   
 				}
 				var m = IRLibLoader.load('/fonts/swis721_bt_bold.typeface.js');
-				var n = IRLibLoader.load('http://0.0.0.0:3000/js/AnswerBox.js');
+				var n = IRLibLoader.load('http://john-sanders-imac:3000/js/AnswerBox.js');
 				
 				if(a.ready() & b.ready() & c.ready() & d.ready() & e.ready() & f.ready() && g.ready() && h.ready() && i.ready() && j.ready() && k.ready() && l.ready() && m.ready() && n.ready()){
 					this.next();

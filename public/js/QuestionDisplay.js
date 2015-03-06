@@ -8,11 +8,11 @@ var QuestionDisplay = function( flare ) {
 	this.add(answerBox);
 
 	var questionFontSize = 50;
-	var sideQuestionScale = .3;
+	var sideQuestionScale = .6;
 	var questionLeftPos = -2900;
 	var questionRightPos = 2900;
-	var questionLeftOff = -3500;
-	var questionRightOff = 3500;
+	var questionLeftOff = -4000;
+	var questionRightOff = 4000;
 	
 	
 	// CREATE CENTER QUESTION MESH
@@ -25,8 +25,8 @@ var QuestionDisplay = function( flare ) {
 	this.add(question);
 	
 	// CREATE SIDE QUESTION MESHES
-	var questionMeshLeft = new THREE.Mesh(questionMesh.geometry, questionMat);
-	var questionMeshRight = new THREE.Mesh(questionMesh.geometry, questionMat);
+	var questionMeshLeft = new THREE.Mesh(questionMesh.geometry.clone(), questionMat);
+	var questionMeshRight = new THREE.Mesh(questionMesh.geometry.clone(), questionMat);
 	questionMeshLeft.scale.set(sideQuestionScale, sideQuestionScale, sideQuestionScale);
 	questionMeshRight.scale.set(sideQuestionScale, sideQuestionScale, sideQuestionScale);
 	var questionLeft = new THREE.Object3D();
@@ -34,10 +34,11 @@ var QuestionDisplay = function( flare ) {
 	questionLeft.add(questionMeshLeft);
 	questionRight.add(questionMeshRight);
 	questionLeft.position.x = questionLeftOff;
-	questionRight.position.y = questionRightOff;
+	questionRight.position.x= questionRightOff;
 	this.add(questionLeft);
 	this.add(questionRight);
 
+	console.log(questionLeft, questionRight)
 	
 	// SET UP FLARES
 	var flare1 = new THREE.Mesh(flare.geometry, flare.material);
@@ -51,7 +52,8 @@ var QuestionDisplay = function( flare ) {
 	
 
 	this.setQuestion = function(questionData){
-		questionMesh.geometry = getText(questionData.questionText);
+		questionMesh.geometry.dispose();
+		questionMesh.geometry = getText(questionData.questionText.toUpperCase());
 		questionMesh.geometry.needsUpdate = true;
 		questionMesh.geometry.computeBoundingBox();		
 		
@@ -61,8 +63,13 @@ var QuestionDisplay = function( flare ) {
 		questionMesh.position.x = -questionWidth/2;
 		questionMesh.position.y = -questionHeight/2;
 		
-		questionMeshLeft.geometry = questionMesh.geometry;
-		questionMeshRight.geometry = questionMesh.geometry;
+		questionMeshLeft.geometry.dispose();
+		questionMeshLeft.geometry = questionMesh.geometry.clone();
+		questionMeshLeft.geometry.needsUpdate = true;
+		
+		questionMeshRight.geometry.dispose();
+		questionMeshRight.geometry = questionMesh.geometry.clone();
+		questionMeshRight.geometry.needsUpdate = true;
 		
 		questionMeshRight.position.x = - questionWidth * sideQuestionScale;
 		questionMeshLeft.position.x = 0;

@@ -5,9 +5,16 @@
 		  <tbody>
 		      <tr>
 			      <td>iPad Upper Pane</td>
-			      <td><button class='btn ipadUpper' name='question'>Question</button></td>
-			      <td><button class='btn ipadUpper' name='research'>Research</button></td>
-			      <td><button class='btn ipadUpper' name='standby'>Standby</button></td>
+			      <td><button class='btn ipadUpper {{ipadUpperActive "question"}}' name='question'>Question</button></td>
+			      <td><button class='btn ipadUpper {{ipadUpperActive "research"}}' name='research'>Research</button></td>
+			      <td><button class='btn ipadUpper {{ipadUpperActive "standby"}}' name='standby'>Standby</button></td>
+		      </tr>
+		      <tr>
+			      <td>iPad Lower Pane</td>
+			      <td><button class='btn ipadLower {{ipadLowerActive "standby"}}' name='standby'>Standby</button></td>
+			      <td><button class='btn ipadLower {{ipadLowerActive "emoji"}}' name='emoji'>Emoji</button></td>
+			      <td><button class='btn ipadLower {{ipadLowerActive "thumbs"}}' name='thumbs'>Thumbs</button></td>
+			      <td><button class='btn ipadLower {{ipadLowerActive "message"}}' name='message'>Message</button></td>
 		      </tr>
 		  </tbody>
 	    </table>

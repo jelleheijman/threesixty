@@ -19,7 +19,7 @@ if (Meteor.isServer) {
 	            Connections.insert({deviceid:id, type:'ipad', answers:[], emoji:'neutral'});
 	        }
 	    }
-		var baseSettings = [{name:'activeQuestion', def:''}, {name:'ipadUpper', def:'standby'}, 
+		var baseSettings = [{name:'activeQuestion', def:''}, {name:'ipadUpper', def:'standby'}, {name:'ipadLower', def:'emoji'},
 							{name:'activeScene', def:'emoji'}, {name:'tickerStatus', def:'on'},
 							{name:'questionMode', def:'question'}];
 		for (i=0; i<baseSettings.length; i++){
@@ -112,7 +112,7 @@ if (Meteor.isServer) {
 			    }
 			    Connections.update({deviceid:deviceid}, {$set: {last_seen: (new Date()).getTime(), status:'connected'}});
 		  	},
-		  	answerQuestion:function(deviceid, question, answer){
+		  	answerQuestion:function(deviceid, question, answer){			  	
 	            Connections.update( {_id:deviceid, "answers.question" : question}, {$set:{'answers.$.answer': answer}} );
 		  		Connections.update( {_id:deviceid, "answers.question" : {$ne:question}} ,
 									{$addToSet : {"answers": {'question':question, 'answer':answer  }} }

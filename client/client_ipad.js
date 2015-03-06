@@ -46,7 +46,12 @@ if (Meteor.isClient) {
 			}
 		},
 		ipadLowerVisible:function(name){
-		    return name === Session.get('ipadLower') ? 'visibleFade' : 'hiddenFade';
+		    var activeLower = SystemSettings.findOne({'name':'ipadLower'});
+			if (activeLower) {
+				return name === activeLower.value ? 'visibleFade' : 'hiddenFade';
+			} else {
+				return '';
+			}
 		},
 		emojis:function(){
 			if (SystemSettings.findOne({name:'emojis'})){

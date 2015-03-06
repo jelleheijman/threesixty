@@ -16,7 +16,7 @@ var AnswerBox = function() {
 		var yTrack = settings[6].startY;
 		for (var i=0; i<6; i++){
 			var thisAnswer = new Answer( settings[6].scale, settings[6].barSize, i );
-			thisAnswer.position.set(0, yTrack, 20);	
+			thisAnswer.position.set(0, yTrack, 30);	
 			yTrack -= settings[6].ySpacing;
 			that.add( thisAnswer );
 			answers.push( thisAnswer );

@@ -75,13 +75,16 @@ canvas {
 }
 
 .hiddenFade {
-	transition: opacity 0.7s;
+	transition: opacity 0.5s, transform 0.5s;
 	opacity:0;
+	transform:scaleY(0);
 	pointer-events:none;
 }
 .visibleFade{
-    transition: opacity 0.7s;
+	animation-delay:0.5s;
+    transition: opacity 0.5s, transform 0.5s;
     opacity:1;
+    transform:scaleY(1);
     pointer-events: inherit;
 }
 .barChartBar{

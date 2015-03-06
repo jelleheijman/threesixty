@@ -1,7 +1,7 @@
 if (Meteor.isClient) {
 	Template.wall.rendered = function(){
 	  // This code only runs on the client
-		var camera, scene, renderer;
+		var scene, renderer;
 		var ticker;
 		var renderWidth = 1280 * 2;
 		var renderHeight = 720;
@@ -188,7 +188,7 @@ if (Meteor.isClient) {
 			document.body.appendChild( container );
 			for (var i=0; i<views.length; i++){
 				var thisCamera = new THREE.OrthographicCamera( views[i].camLeft, views[i].camRight, sceneStripHeight/2, sceneStripHeight/-2, 1, 20000 );
-				thisCamera.position.set(0,0,camZ);
+				thisCamera.position.set(0,0,camZ );
 				views[i].camera = thisCamera;
 			}
 			scene = new THREE.Scene();		
