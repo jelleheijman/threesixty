@@ -1,6 +1,7 @@
-var ValueNumber = function( numPlanes ) {
+var ValueNumberArray = function( numPlanes, percent ) {
     THREE.Object3D.apply(this);
 	
+	var numDigits
 	
 	
 	
@@ -8,8 +9,7 @@ var ValueNumber = function( numPlanes ) {
 ValueNumber.prototype = Object.create(THREE.Object3D.prototype);
 ValueNumber.prototype.constructor = ValueNumber;
 
-var ValueNumbers = function() {
-    THREE.Object3D.apply(this);
+var ValueNumberGenerator = function() {
     
     var numsCss = "color:white; "
     var pctCss = "color:white; "
@@ -22,8 +22,12 @@ var ValueNumbers = function() {
 	}
 	
 	var percent = new DomPlane('%', pctCss);
+	
+	
+	this.createValueNumberArray = function(){
+		return new ValueNumberArray( numPlanes, percent );
+	}
 
 }
-ValueNumbers.prototype = Object.create(THREE.Object3D.prototype);
 ValueNumbers.prototype.constructor = ValueNumbers;
 
