@@ -60,14 +60,14 @@ if (Meteor.isClient) {
 		}
 	});
 	Template.ipad.events({
-		'click .answer':function (event, template){
+		'touchstart .answer, click .answer':function (event, template){
 			var activeQuestionSettings = SystemSettings.findOne({'name':'activeQuestion'});
 			if (activeQuestionSettings.value){
 				var activeQuestion = activeQuestionSettings.value;
 				Meteor.call( 'answerQuestion', Session.get('mongo_id'), activeQuestion, $(event.target).attr('name') );
 			}
 		},
-		'click  .emojiButton': function(event, template){
+		'touchstart .emojiButton, click .emojiButton': function(event, template){
 		    if (Session.get('mongo_id')) {
     		    Connections.update(Session.get('mongo_id'), {$set:{emoji:event.target.name}});
 		    }			

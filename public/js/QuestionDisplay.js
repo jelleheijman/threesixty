@@ -37,8 +37,6 @@ var QuestionDisplay = function( flare ) {
 	questionRight.position.x= questionRightOff;
 	this.add(questionLeft);
 	this.add(questionRight);
-
-	console.log(questionLeft, questionRight)
 	
 	// SET UP FLARES
 	var flare1 = new THREE.Mesh(flare.geometry, flare.material);

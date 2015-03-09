@@ -1,8 +1,7 @@
-var AnswerBox = function() {
+var AnswerBox = function( ) {
     THREE.Object3D.apply(this);
 	var that = this;
 	var answerBoxScale = 78;
-	
 	var answers = [];
 	var settings = {
 						2:{startY:29, ySpacing:55, scale:1.2, barSize:45/56},
@@ -14,13 +13,16 @@ var AnswerBox = function() {
 	
 	function init(){		
 		var yTrack = settings[6].startY;
-		for (var i=0; i<6; i++){
-			var thisAnswer = new Answer( settings[6].scale, settings[6].barSize, i );
-			thisAnswer.position.set(0, yTrack, 30);	
-			yTrack -= settings[6].ySpacing;
-			that.add( thisAnswer );
-			answers.push( thisAnswer );
-		}
+		var valueGenerator = new ValueNumberGenerator();
+		setTimeout(function() {
+			for (var i=0; i<6; i++){
+				var thisAnswer = new Answer( settings[6].scale, settings[6].barSize, i, valueGenerator );
+				thisAnswer.position.set(0, yTrack, 30);	
+				yTrack -= settings[6].ySpacing;
+				that.add( thisAnswer );
+				answers.push( thisAnswer );
+			}
+		}, 3000);
 	}
 	
 	this.setAnswers = function( newAnswers ){
@@ -87,7 +89,7 @@ AnswerQuestion.prototype = Object.create(THREE.Object3D.prototype);
 AnswerQuestion.prototype.constructor = AnswerQuestion;
 
 
-var Answer = function( scale, barSize, iter ) {
+var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
 	THREE.Object3D.apply(this);
 	var that = this;
 	var css = {'display':'inline-block',
@@ -98,6 +100,7 @@ var Answer = function( scale, barSize, iter ) {
     
     this.percent;
     this.votes;
+    this.onScreen = false;
     
     this.setAnswer = function( answerData, scale, barSize ){
 	    answerText = answerData.answer;
@@ -114,9 +117,6 @@ var Answer = function( scale, barSize, iter ) {
     }
     
     this.updateAnswer = function ( answerData ) {
-	    if (that.percent < .001){
-		    that.percent = .01;
-	    }
 	    that.percent = answerData.percent;
 	    that.votes = answerData.votes;
     }
@@ -133,11 +133,12 @@ var Answer = function( scale, barSize, iter ) {
 	    }
     }
     
+    
     var plane = new DomPlane( 'INITIAL QUESTION TEXT', css );
     plane.eventEmitter.addEventListener('ready', planeReady);
     this.add(plane.mesh);
     
-    var meshWidth = 1500;
+    var meshWidth = 1350;
     var barMesh = new THREE.Mesh( new THREE.BoxGeometry(meshWidth, 45, 45), new THREE.MeshPhongMaterial({color:0xFF0000, shininess:150}) );
     barMesh.position.x = meshWidth/2;
     barMesh.rotation.x = .02 * iter;
@@ -147,14 +148,22 @@ var Answer = function( scale, barSize, iter ) {
     bar.add(barMesh);
     this.add(bar);
     
+    var valueNumber = valueNumberGenerator.createValueNumberArray();
+    valueNumber.position.z = 20;
+    this.add(valueNumber);
+    
     function planeReady(){
 	    plane.mesh.position.x = -610 - plane.width/2;
 	    //plane.setScale(scale);
     }
     
+    var barPad = .03;
     setInterval( function(){
-	    if ( bar.scale.x != that.percent ){
-		    TweenLite.to(bar.scale, 1, {x:that.percent});
+	    if ( (that.percent || that.percent === 0) && bar.scale.x != that.percent + barPad ){
+		    TweenLite.to(bar.scale, 1, {x:that.percent + barPad});
+		    TweenLite.to(valueNumber.position, 1, {x:-600 + meshWidth * (that.percent+.03) + 84, onUpdate:function(){
+			    valueNumber.setNum( bar.scale.x - barPad > .001 ? bar.scale.x - barPad : 0 );
+		    }});
 	    }
     }, 1010);
 }

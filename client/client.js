@@ -75,6 +75,7 @@ if (Meteor.isClient) {
 				var f = IRLibLoader.load('/js/DomPlane.js');
 				var g = IRLibLoader.load('/js/Emojis.js');
 				var h = IRLibLoader.load('/js/Emoji.js');
+				var h2 = IRLibLoader.load('/js/ValueNumbers.js', {error:function(e){console.log(e);}});
 				var i = IRLibLoader.load('/js/OBJLoader.js');
 				var j = IRLibLoader.load('/js/MTLLoader.js');
 				var k = IRLibLoader.load('http://john-sanders-imac:3000/js/QuestionDisplay.js', {error:function(e){console.log(e);}});
@@ -85,7 +86,7 @@ if (Meteor.isClient) {
 				var m = IRLibLoader.load('/fonts/swis721_bt_bold.typeface.js');
 				var n = IRLibLoader.load('http://john-sanders-imac:3000/js/AnswerBox.js');
 				
-				if(a.ready() & b.ready() & c.ready() & d.ready() & e.ready() & f.ready() && g.ready() && h.ready() && i.ready() && j.ready() && k.ready() && l.ready() && m.ready() && n.ready()){
+				if(a.ready() & b.ready() & c.ready() & d.ready() & e.ready() & f.ready() && g.ready() && h.ready() && h2.ready() && i.ready() && j.ready() && k.ready() && l.ready() && m.ready() && n.ready()){
 					this.next();
 				}
 			}

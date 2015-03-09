@@ -133,6 +133,14 @@ if (Meteor.isClient) {
 			    
 		    }, 6000);
 		    
+		    
+		    setTimeout( function(){
+			    // SET THE QUESTION DISPLAY TO THE ACTIVE QUESTION
+			    var activeQuestionId = SystemSettings.findOne({name:'activeQuestion'}).value;
+			    var activeQuestion = Questions.findOne(activeQuestionId);
+			    scenes.question.setQuestion(activeQuestion);
+		    }, 8000);
+		    
 
 		    var bkgGeom = new THREE.PlaneBufferGeometry(6000, 200);
 		    var bkgMat = new THREE.MeshBasicMaterial({map:THREE.ImageUtils.loadTexture('/img/wall_bkg.jpg')});
