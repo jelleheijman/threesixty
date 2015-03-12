@@ -44,6 +44,10 @@ if (Meteor.isClient){
 		'click .questionMode':function( event, template){
 			var questionModeSetting = SystemSettings.findOne({'name':'questionMode'});
 			SystemSettings.update( questionModeSetting._id, {$set:{value:event.target.name}} );
+		},
+		'click .emojiMode':function( event, template ){
+			var questionModeSetting = SystemSettings.findOne({'name':'emojiMode'});
+			SystemSettings.update( questionModeSetting._id, {$set:{value:event.target.name}} );
 		}
 		
 	});    

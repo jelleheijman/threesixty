@@ -11,7 +11,13 @@
 			<button class='btn btn-large questionMode {{modeActive "question" "question"}}' name='question'>Question</button>	
 			<button class='btn btn-large questionMode {{modeActive "question" "answer"}}' name='answer'>Answer</button>	
 		</div>
-		
+
+		<div class='controllerBody {{modeVisible "emoji"}}'>
+			<h4>SCENE MODE</h4>
+			<button class='btn btn-large emojiMode {{modeActive "emoji" "full"}}' name='full'>Full</button>	
+			<button class='btn btn-large emojiMode {{modeActive "emoji" "results"}}' name='results'>Results</button>	
+		</div>
+
 		<div class='controllerBody'>
 			<button class='btn btn-large {{tickerActive}}' id='ticker' name='ticker'>Ticker {{tickerText}}</button>
 		</div>

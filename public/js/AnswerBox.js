@@ -45,13 +45,13 @@ var AnswerBox = function( ) {
 		}
 	}
     
-    this.hide = function(dur, delay){
+    this.reveal = function(dur, delay){
 		TweenLite.to( that.rotation, dur, {x:0, delay:delay, onStart:function(){
 						that.visible = true;
 					}});
     }
-    this.reveal = function(dur, delay){
-		TweenLite.to( that.rotation, dur/2, {x:-Math.PI*2/4, onComplete:function(){
+    this.hide = function(dur, delay){
+		TweenLite.to( that.rotation, dur/2, {x:-Math.PI*2/4, delay:delay, onComplete:function(){
 			that.visible = false;
 		}} );
     }

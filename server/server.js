@@ -21,7 +21,8 @@ if (Meteor.isServer) {
 	    }
 		var baseSettings = [{name:'activeQuestion', def:''}, {name:'ipadUpper', def:'standby'}, {name:'ipadLower', def:'emoji'},
 							{name:'activeScene', def:'emoji'}, {name:'tickerStatus', def:'on'},
-							{name:'questionMode', def:'question'}];
+							{name:'questionMode', def:'question'}, {name:'emojiMode', def:'full'}, 
+							{name:'ipadEmoji', def:'emoji'}];
 		for (i=0; i<baseSettings.length; i++){
 	    	if (!SystemSettings.findOne({name:baseSettings[i].name})){
 	        	SystemSettings.insert({name:baseSettings[i].name, value:baseSettings[i].def});

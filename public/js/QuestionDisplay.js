@@ -13,14 +13,20 @@ var QuestionDisplay = function( flare ) {
 	var questionRightPos = 2900;
 	var questionLeftOff = -4000;
 	var questionRightOff = 4000;
+	var questionWidth, questionHeight;
 	
 	
 	// CREATE CENTER QUESTION MESH
-	
 	var questionMat = new THREE.MeshLambertMaterial({color:0xFFFFFF});
 	var questionMesh = new THREE.Mesh(new THREE.Geometry(), questionMat);
+	
+	var questionBackerGeom = new THREE.BoxGeometry(1,1);
+	var questionBackerMat = new THREE.MeshLambertMaterial({color:0x063066});
+	var questionBacker = new THREE.Mesh( questionBackerGeom, questionBackerMat );
+	
 	var question = new THREE.Object3D();
 	question.visible = false;
+	question.add(questionBacker);
 	question.add(questionMesh);
 	this.add(question);
 	
@@ -46,6 +52,11 @@ var QuestionDisplay = function( flare ) {
 	flare2.position.x = 3500;
 	flare1.position.z = 50;
 	flare2.position.z = 50;
+	flare1.scale.y = 50;
+	flare1.scale.x = 100;
+	flare2.scale.y = 50;
+	flare2.scale.x = 100;
+	
 	this.add(flare1, flare2);
 	
 
@@ -55,11 +66,16 @@ var QuestionDisplay = function( flare ) {
 		questionMesh.geometry.needsUpdate = true;
 		questionMesh.geometry.computeBoundingBox();		
 		
-		var questionWidth = questionMesh.geometry.boundingBox.max.x - questionMesh.geometry.boundingBox.min.x;
-		var questionHeight = questionMesh.geometry.boundingBox.max.y - questionMesh.geometry.boundingBox.min.y;
+		questionWidth = questionMesh.geometry.boundingBox.max.x - questionMesh.geometry.boundingBox.min.x;
+		questionHeight = questionMesh.geometry.boundingBox.max.y - questionMesh.geometry.boundingBox.min.y;
 
 		questionMesh.position.x = -questionWidth/2;
 		questionMesh.position.y = -questionHeight/2;
+		
+		questionBacker.scale.x = 500;//questionWidth + 30;
+		questionBacker.scale.y = 500;//questionHeight + 10;
+		flare1.scale.x = questionWidth;
+		flare2.scale.x = questionWidth;
 		
 		questionMeshLeft.geometry.dispose();
 		questionMeshLeft.geometry = questionMesh.geometry.clone();
@@ -102,12 +118,12 @@ var QuestionDisplay = function( flare ) {
 			TweenLite.to( question.rotation, dur/2, {x:Math.PI*2/4, onComplete:function(){
 				question.visible = false;
 			}} );
-			answerBox.hide(dur/2, dur/2);
+			answerBox.reveal(dur/2, dur/2);
 			
 			TweenLite.to( questionLeft.position, dur/2, {x:questionLeftPos});
 			TweenLite.to( questionRight.position, dur/2, {x:questionRightPos});
 		} else if (mode == 'question'){
-			answerBox.reveal( dur/2, 0 );
+			answerBox.hide( dur/2, 0 );
 			TweenLite.to( question.rotation, dur/2, {x:0, delay:dur/4, onStart:function(){
 				question.visible = true;
 			}});
@@ -131,9 +147,9 @@ var QuestionDisplay = function( flare ) {
 						//TweenLite.to(flare1.position, .2, {x:-500, y:30, ease:Linear.easeInOut});
 						
 						//TweenLite.to(flare1.scale, .2, {x:2, y:2});
-						TweenLite.to(flare2.scale, .2, {x:10, y:3, onComplete:function(){
+						TweenLite.to(flare2.scale, .2, {x:questionWidth*2, y:questionHeight, onComplete:function(){
 							TweenLite.to(flare2.position, .5, {y:-32, ease:Linear.easeInOut});
-							TweenLite.to(flare2.scale, .5, {x:3, y:.1});
+							TweenLite.to(flare2.scale, .5, {x:questionWidth, y:10});
 						}});
 				}, 500);			
 		}, delay*1000);

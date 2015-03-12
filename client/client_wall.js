@@ -19,7 +19,7 @@ if (Meteor.isClient) {
 		var sceneStripHeight = sceneStripWidth / stripAspect;
 		var camZ = 16110;
 
-		var flareGeom = new THREE.PlaneBufferGeometry( 500,100 );
+		var flareGeom = new THREE.PlaneBufferGeometry( 1,1 );
 		var flareTex = THREE.ImageUtils.loadTexture('/img/blue_flare.jpg');
 		flareTex.repeat = new THREE.Vector2(.99,.99);
 		flareTex.offset = new THREE.Vector2(.005,0);
@@ -32,27 +32,21 @@ if (Meteor.isClient) {
 		var views = [
 			{
 				left: 0, bottom: 2/3, width: .5, height: 1/3, camLeft:-3000, camRight:-2000,
-				background: new THREE.Color().setRGB( .4,.2,.3 )
 			},
 			{ 
-				left: 0, bottom: 1/3, width: .5, height: 1/3, camLeft:-1000, camRight:0,
-				background: new THREE.Color().setRGB( 0.7, 0.5, 0.5 )
+				left: 0, bottom: 1/3, width: .5, height: 1/3, camLeft:-2000, camRight:-1000,
 			},
 			{ 
-				left: 0, bottom: 0, width: .5, height: 1/3, camLeft:1000, camRight:2000,
-				background: new THREE.Color().setRGB( 0.5, 0.7, 0.7 )
+				left: 0, bottom: 0, width: .5, height: 1/3, camLeft:-1000, camRight:0,
 			},
 			{
-				left: .5, bottom: 2/3, width: .5, height: 1/3, camX: -1500, camLeft:-2000, camRight:-1000,
-				background: new THREE.Color().setRGB( 0.8, 0.5, 0.7 ),
+				left: .5, bottom: 2/3, width: .5, height: 1/3, camLeft:0, camRight:1000,
 			},
 			{ 
-				left: .5, bottom: 1/3, width: .5, height: 1/3, camLeft:0, camRight:1000,
-				background: new THREE.Color().setRGB( 0.3, 0.5, 0.5 ),
+				left: .5, bottom: 1/3, width: .5, height: 1/3, camLeft:1000, camRight:2000,
 			},
 			{ 
 				left: .5, bottom: 0, width: .5, height: 1/3, camLeft:2000, camRight:3000,
-				background: new THREE.Color().setRGB( 0.9, 0.7, 0.7 ),
 			}
 		];
 
@@ -75,6 +69,8 @@ if (Meteor.isClient) {
 			    SystemSettings.update( activeSceneSetting._id, {$set: {value:''}} );
 			    var questionModeSetting = SystemSettings.findOne({name:'questionMode'});
 			    SystemSettings.update( questionModeSetting._id, {$set: {value:'question'}} );
+			    var emojiModeSetting = SystemSettings.findOne({name:'emojiMode'});
+			    SystemSettings.update( emojiModeSetting._id, {$set: {value:'full'}} );
 
 			    scene.add(scenes.question);
 		    }, 4000);
@@ -139,7 +135,7 @@ if (Meteor.isClient) {
 			    var activeQuestionId = SystemSettings.findOne({name:'activeQuestion'}).value;
 			    var activeQuestion = Questions.findOne(activeQuestionId);
 			    scenes.question.setQuestion(activeQuestion);
-		    }, 8000);
+		    }, 10000);
 		    
 
 		    var bkgGeom = new THREE.PlaneBufferGeometry(6000, 200);
@@ -238,6 +234,9 @@ if (Meteor.isClient) {
 					break;
 				case 'questionMode':
 					scenes.question.setMode(newSetting.value);
+					break;
+				case 'emojiMode':
+					scenes.emoji.setMode(newSetting.value);
 					break;
 			}
 		}
