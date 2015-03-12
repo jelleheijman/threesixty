@@ -20,13 +20,13 @@ var QuestionDisplay = function( flare ) {
 	var questionMat = new THREE.MeshLambertMaterial({color:0xFFFFFF});
 	var questionMesh = new THREE.Mesh(new THREE.Geometry(), questionMat);
 	
-	var questionBackerGeom = new THREE.BoxGeometry(1,1);
-	var questionBackerMat = new THREE.MeshLambertMaterial({color:0x063066});
-	var questionBacker = new THREE.Mesh( questionBackerGeom, questionBackerMat );
+	//var questionBackerGeom = new THREE.BoxGeometry(1,1);
+	//var questionBackerMat = new THREE.MeshLambertMaterial({color:0x063066});
+	//var questionBacker = new THREE.Mesh( questionBackerGeom, questionBackerMat );
 	
 	var question = new THREE.Object3D();
 	question.visible = false;
-	question.add(questionBacker);
+	//question.add(questionBacker);
 	question.add(questionMesh);
 	this.add(question);
 	
@@ -72,8 +72,8 @@ var QuestionDisplay = function( flare ) {
 		questionMesh.position.x = -questionWidth/2;
 		questionMesh.position.y = -questionHeight/2;
 		
-		questionBacker.scale.x = 500;//questionWidth + 30;
-		questionBacker.scale.y = 500;//questionHeight + 10;
+		//questionBacker.scale.x = 500;//questionWidth + 30;
+		//questionBacker.scale.y = 500;//questionHeight + 10;
 		flare1.scale.x = questionWidth;
 		flare2.scale.x = questionWidth;
 		
