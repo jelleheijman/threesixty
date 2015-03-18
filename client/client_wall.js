@@ -19,7 +19,7 @@ if (Meteor.isClient) {
 		var sceneStripHeight = sceneStripWidth / stripAspect;
 		var camZ = 16110;
 
-		var flareGeom = new THREE.PlaneBufferGeometry( 1,1 );
+		var flareGeom = new THREE.PlaneBufferGeometry( 10,10 );
 		var flareTex = THREE.ImageUtils.loadTexture('/img/blue_flare.jpg');
 		flareTex.repeat = new THREE.Vector2(.99,.99);
 		flareTex.offset = new THREE.Vector2(.005,0);
@@ -34,16 +34,16 @@ if (Meteor.isClient) {
 				left: 0, bottom: 2/3, width: .5, height: 1/3, camLeft:-3000, camRight:-2000,
 			},
 			{ 
-				left: 0, bottom: 1/3, width: .5, height: 1/3, camLeft:-2000, camRight:-1000,
+				left: 0, bottom: 1/3, width: .5, height: 1/3, camLeft:-1000, camRight:0,
 			},
 			{ 
-				left: 0, bottom: 0, width: .5, height: 1/3, camLeft:-1000, camRight:0,
+				left: 0, bottom: 0, width: .5, height: 1/3, camLeft:1000, camRight:2000, 
 			},
 			{
-				left: .5, bottom: 2/3, width: .5, height: 1/3, camLeft:0, camRight:1000,
+				left: .5, bottom: 2/3, width: .5, height: 1/3,  camLeft:-2000, camRight:-1000,
 			},
 			{ 
-				left: .5, bottom: 1/3, width: .5, height: 1/3, camLeft:1000, camRight:2000,
+				left: .5, bottom: 1/3, width: .5, height: 1/3,  camLeft:0, camRight:1000, 
 			},
 			{ 
 				left: .5, bottom: 0, width: .5, height: 1/3, camLeft:2000, camRight:3000,
@@ -137,16 +137,17 @@ if (Meteor.isClient) {
 			    scenes.question.setQuestion(activeQuestion);
 		    }, 10000);
 		    
+			
+			var backgroundScene = new BackgroundScene(flare);
+			backgroundScene.position.z;
+			scene.add(backgroundScene);
+			
+		    //var bkgGeom = new THREE.PlaneBufferGeometry(6000, 200);
+		    //var bkgMat = new THREE.MeshBasicMaterial({map:THREE.ImageUtils.loadTexture('/img/wall_bkg.jpg')});
+		    //var bkg = new THREE.Mesh(bkgGeom, bkgMat);
+		    //bkg.position.z = -500;
+		    //scene.add(bkg);
 
-		    var bkgGeom = new THREE.PlaneBufferGeometry(6000, 200);
-		    var bkgMat = new THREE.MeshBasicMaterial({map:THREE.ImageUtils.loadTexture('/img/wall_bkg.jpg')});
-		    var bkg = new THREE.Mesh(bkgGeom, bkgMat);
-		    bkg.position.z = -50;
-		    scene.add(bkg);
-		    
-		    //setInterval( function(){
-    		//    emoji.setEmoji(Math.round(Math.random() * 100 + 1), 'happy');
-		    //}, 2000);
 		    
             animate();
 	    });
@@ -179,7 +180,7 @@ if (Meteor.isClient) {
 				renderer.setViewport( left, bottom, width, height );
 				renderer.setScissor( left, bottom, width, height );
 				renderer.enableScissorTest ( true );
-				renderer.setClearColor( view.background );
+
 		
 				camera.aspect = width / height;
 				camera.updateProjectionMatrix();
@@ -191,7 +192,8 @@ if (Meteor.isClient) {
 			container = document.createElement( 'div' );
 			document.body.appendChild( container );
 			for (var i=0; i<views.length; i++){
-				var thisCamera = new THREE.OrthographicCamera( views[i].camLeft, views[i].camRight, sceneStripHeight/2, sceneStripHeight/-2, 1, 20000 );
+				var thisCamera = new THREE.OrthographicCamera( views[i].camLeft, views[i].camRight, sceneStripHeight/2, sceneStripHeight/-2, 1, 20000
+				 );
 				thisCamera.position.set(0,0,camZ );
 				views[i].camera = thisCamera;
 			}
@@ -199,11 +201,12 @@ if (Meteor.isClient) {
 			scene.add( new THREE.AmbientLight( 0x505050 ) );
 		
 			var light = new THREE.PointLight( 0xffffff, 1.5, 17000 );
-			light.position.set( 0, 3000, 10000 );
+			light.position.set( 0, 3000, 5000 );
 			scene.add( light );
 			
 			renderer = new THREE.WebGLRenderer( { antialias:true } );
 			renderer.sortObjects = false;
+			renderer.setClearColor( 0x28405d );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.appendChild( renderer.domElement );
 		}

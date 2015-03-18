@@ -71,22 +71,24 @@ if (Meteor.isClient) {
 				var b = IRLibLoader.load('/js/ReconnectingWebSocketNew.js', {error:function(e){console.log(e);}});
 				var c = IRLibLoader.load('/js/TweenMax.min.js', {error:function(e){console.log(e);}});
 				var d = IRLibLoader.load('/js/EasePack.min.js', {error:function(e){console.log(e);}});
-				var e = IRLibLoader.load('http://localhost:3000/js/Ticker.js', {error:function(e){console.log(e);}});
+				var e = IRLibLoader.load('/js/Ticker.js', {error:function(e){console.log(e);}});
 				var f = IRLibLoader.load('/js/DomPlane.js', {error:function(e){console.log(e);}});
 				var g = IRLibLoader.load('/js/Emojis.js', {error:function(e){console.log(e);}});
 				var h = IRLibLoader.load('/js/Emoji.js', {error:function(e){console.log(e);}});
 				var h2 = IRLibLoader.load('/js/ValueNumbers.js', {error:function(e){console.log(e);}});
 				var i = IRLibLoader.load('/js/OBJLoader.js', {error:function(e){console.log(e);}});
 				var j = IRLibLoader.load('/js/MTLLoader.js', {error:function(e){console.log(e);}});
-				var k = IRLibLoader.load('http://localhost:3000/js/QuestionDisplay.js', {error:function(e){console.log(e);}});
+				var k = IRLibLoader.load('/js/QuestionDisplay.js', {error:function(e){console.log(e);}});
 				var l;
 				if (j.ready()){
 					l = IRLibLoader.load('/js/OBJMTLLoader.js', {error:function(e){console.log(e);}}); 
 				}
 				var m = IRLibLoader.load('/fonts/swis721_bt_bold.typeface.js', {error:function(e){console.log(e);}});
-				var n = IRLibLoader.load('http://localhost:3000/js/AnswerBox.js', {error:function(e){console.log(e);}});
+				var m = IRLibLoader.load('/fonts/swis721_bt_bold.typeface.js', {error:function(e){console.log(e);}});
+				var n = IRLibLoader.load('/js/AnswerBox.js', {error:function(e){console.log(e);}});
+				var o = IRLibLoader.load('/js/BackgroundScene.js', {error:function(e){console.log(e);}});
 				
-				if(a.ready() & b.ready() & c.ready() & d.ready() & e.ready() & f.ready() && g.ready() && h.ready() && h2.ready() && i.ready() && j.ready() && k.ready() && l.ready() && m.ready() && n.ready()){
+				if(a.ready() & b.ready() & c.ready() & d.ready() & e.ready() & f.ready() && g.ready() && h.ready() && h2.ready() && i.ready() && j.ready() && k.ready() && l.ready() && m.ready() && n.ready() && o.ready()){
 					this.next();
 				}
 			}

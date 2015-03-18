@@ -88,7 +88,6 @@ ValueNumber.prototype.constructor = ValueNumber;
 
 
 var ValueNumberGenerator = function() {
-    
     var numsCss = {'display':'inline-block',
 	    	   'fontSize':'23px',
 	    	   'fontFamily':'Swiss',

@@ -3,6 +3,7 @@ var AnswerBox = function( ) {
 	var that = this;
 	var answerBoxScale = 78;
 	var answers = [];
+
 	var settings = {
 						2:{startY:29, ySpacing:55, scale:1.2, barSize:45/56},
 						3:{startY:47, ySpacing:46, scale:1.2, barSize:38/56},
