@@ -61,12 +61,10 @@ var EmojiTimesTwo = function(width, height, numEmoji, numRows){
     
     var emojiGeom, emojiBackerGeom;
     
-    emojiGeom = new THREE.CircleGeometry(1.5,20);
-    var geomLoader = new THREE.OBJLoader();
-    geomLoader.load('/models/emojiBacker.obj', function(obj){
-        emojiBackerGeom = obj.children[0].geometry;
-        createEmoji();    
-    });
+    emojiGeom = new THREE.PlaneBufferGeometry(1.5,1.5);
+    emojiBackerGeom = new THREE.BoxGeometry(1.5, 1.5, .5);
+    createEmoji();
+
     
     function createEmoji(){
         left =  new Emojis(width, height, numEmoji, numRows, emojiBackerGeom, emojiGeom, backerMats, emojiMats, true);

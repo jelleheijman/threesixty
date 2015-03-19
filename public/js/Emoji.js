@@ -1,7 +1,7 @@
 var Emoji = function( id, backerGeom, backerMat, emojiGeom, emojiMat, homePosition ) {
     THREE.Object3D.apply(this);
 
-    var scale = 10;
+    var scale = 20;
     var that=this;
     this.mood = 'neutral';
     this.rotation.x = Math.PI*2/4;
@@ -9,6 +9,7 @@ var Emoji = function( id, backerGeom, backerMat, emojiGeom, emojiMat, homePositi
     this.position.set(homePosition.x, homePosition.y, 0);
     
     var backer = new THREE.Mesh(backerGeom, backerMat);
+    backer.rotation.x = -Math.PI*2/4;
     var emoji = new THREE.Mesh(emojiGeom, emojiMat);
     emoji.rotation.x = -Math.PI*2/4;
     emoji.position.y = .8;
