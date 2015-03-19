@@ -20,13 +20,10 @@ var QuestionDisplay = function( flare ) {
 	var questionMat = new THREE.MeshLambertMaterial({color:0xFFFFFF});
 	var questionMesh = new THREE.Mesh(new THREE.Geometry(), questionMat);
 	
-	//var questionBackerGeom = new THREE.BoxGeometry(1,1);
-	//var questionBackerMat = new THREE.MeshLambertMaterial({color:0x063066});
-	//var questionBacker = new THREE.Mesh( questionBackerGeom, questionBackerMat );
-	
+
 	var question = new THREE.Object3D();
 	question.visible = false;
-	//question.add(questionBacker);
+
 	question.add(questionMesh);
 	this.add(question);
 	
@@ -47,18 +44,16 @@ var QuestionDisplay = function( flare ) {
 	// SET UP FLARES
 	var flare1 = new THREE.Mesh(flare.geometry, flare.material);
 	var flare2 = new THREE.Mesh(flare.geometry, flare.material);
+	this.add(flare1, flare2);
 	
 	flare1.position.x = -3500;
 	flare2.position.x = 3500;
 	flare1.position.z = 50;
 	flare2.position.z = 50;
-	flare1.scale.y = 50;
-	flare1.scale.x = 100;
-	flare2.scale.y = 50;
-	flare2.scale.x = 100;
-	
-	this.add(flare1, flare2);
-	
+	flare1.scale.y = 100;
+	flare1.scale.x = 200;
+	flare2.scale.y = 100;
+	flare2.scale.x = 200;
 
 	this.setQuestion = function(questionData){
 		questionMesh.geometry.dispose();
@@ -135,28 +130,33 @@ var QuestionDisplay = function( flare ) {
 	this.setQuestion({questionText:'INITIAL QUESTION'});
 
 	this.reveal = function(delay){
+			
 		setTimeout( function(){
+			flare1.scale.y = 100;
+			flare1.scale.x = 200;
+			flare2.scale.y = 100;
+			flare2.scale.x = 200;
+			flare1.position.x = -3500;
+			flare2.position.x = 3500;
 			question.visible = false;
 			that.visible = true;
 			TweenLite.to(flare1.position, .5, {x:0, ease:Linear.easeInOut});
 			TweenLite.to(flare2.position, .5, {x:0, ease:Linear.easeInOut});
 			setTimeout( function(){
 						question.visible = true;
-						TweenLite.from(question.rotation, 1, {x:-Math.PI*2 * .75});
-						flare1.visible = false;
-						//TweenLite.to(flare1.position, .2, {x:-500, y:30, ease:Linear.easeInOut});
+						TweenLite.from(question.rotation, .5, {x:Math.PI*2 * .75});
+						TweenLite.to(flare1.position, .2, {x:-500, y:30, ease:Linear.easeInOut});
 						
 						//TweenLite.to(flare1.scale, .2, {x:2, y:2});
 						TweenLite.to(flare2.scale, .2, {x:questionWidth*2, y:questionHeight, onComplete:function(){
 							TweenLite.to(flare2.position, .5, {y:-32, ease:Linear.easeInOut});
-							TweenLite.to(flare2.scale, .5, {x:questionWidth, y:10});
+							TweenLite.to(flare2.scale, .5, {x:questionWidth, y:50});
 						}});
 				}, 500);			
 		}, delay*1000);
 	};
 	
 	this.hide = function(){
-		flare1.visible = true;
 		TweenLite.to(flare1.scale, .2, {x:1, y:1, onComplete:function(){
 			question.visible = false;
 		}});

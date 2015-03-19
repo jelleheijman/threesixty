@@ -68,6 +68,7 @@ var AnswerBox = function( ) {
 		}
     }
     
+    /*
 	var loader = new THREE.OBJMTLLoader();
 	loader.load( '/models/question_box.obj', '/models/question_box.mtl', function(obj){
 		answerBox = obj.children[0];
@@ -76,7 +77,8 @@ var AnswerBox = function( ) {
 		that.add(answerBox);
 		init();
 	});
-    
+    */
+    init();
 }
 AnswerBox.prototype = Object.create(THREE.Object3D.prototype);
 AnswerBox.prototype.constructor = AnswerBox;
