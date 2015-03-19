@@ -1,13 +1,13 @@
 var TitleScene = function( flare ) {
-    THREE.Object3D.apply(this);
+	THREE.Object3D.apply(this);
 	var that = this;
 	
 	var europeMapLeft, europeMapRight, title;
 
 	//CREATE FLARE FOR TITLE GRAPHIC
 	var titleFlare = new THREE.Mesh(flare.geometry, flare.material);
-	titleFlare.position.set(100, 60, -400);
-	titleFlare.scale.set(35, 1.5, 1);
+	titleFlare.position.set(300, 60, -400);
+	titleFlare.scale.set(350, 15, 1);
 	this.add(titleFlare);
 
 	// CREATE LIGHT BLOBS
@@ -40,12 +40,6 @@ var TitleScene = function( flare ) {
 	var glassRight = new THREE.Mesh(glassGeom, glassMat);
 	glassLeft.position.set(-1200, 0, -600);
 	glassRight.position.set(1200, 0, -600);
-	this.add(glassLeft, glassRight);
-
-
-
-
-	
 
     //// LOAD COLUMN MAPS
 	var loader = new THREE.OBJMTLLoader();
@@ -148,13 +142,15 @@ var TitleScene = function( flare ) {
 			TweenLite.to( blob2.position, 70, {x:1100, ease:Sine.easeInOut} );
 			TweenLite.to( glassLeft.position, 70, {x:-2900, ease:Sine.easeInOut} );
 			TweenLite.to( glassRight.position, 70, {x:2900, ease:Sine.easeInOut} );
+			TweenLite.to( titleFlare.position, 70, {x:-250, ease:Sine.easeInOut} );
 	}
 	function moveEffectsB(){
 			TweenLite.to( blob1.position, 70, {x:-2800, ease:Sine.easeInOut, onComplete:moveEffectsA} );
 			TweenLite.to( blob2.position, 70, {x:2800, ease:Sine.easeInOut} );
 			TweenLite.to( glassLeft.position, 70, {x:-1200, ease:Sine.easeInOut} );
 			TweenLite.to( glassRight.position, 70, {x:1200, ease:Sine.easeInOut} );
-	}
+			TweenLite.to( titleFlare.position, 70, {x:250, ease:Sine.easeInOut} );
+	}  
 	
 	function rotateMapA(){
 			TweenLite.to( europeMapLeft.rotation, 50, {y:-.2, ease:Sine.easeInOut, onComplete:rotateMapB} );
