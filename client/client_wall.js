@@ -19,13 +19,17 @@ if (Meteor.isClient) {
 		var sceneStripHeight = sceneStripWidth / stripAspect;
 		var camZ = 16110;
 
-		var flareGeom = new THREE.PlaneBufferGeometry( 10,10 );
+		var flareGeom = new THREE.PlaneBufferGeometry( 1,1 );
 		var flareTex = THREE.ImageUtils.loadTexture('/img/blue_flare.jpg');
 		flareTex.repeat = new THREE.Vector2(.99,.99);
 		flareTex.offset = new THREE.Vector2(.005,0);
-		var flareMat = new THREE.MeshBasicMaterial({map:flareTex, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending});
+		var flareMat = new THREE.MeshBasicMaterial({map:flareTex, transparent:true, blending:THREE.AdditiveBlending});
+		flareMat.depthWrite = false;
+		flareMat.depthTest = false;
+		flareMat.needsUpdate = true;
 		var flare = {geometry:flareGeom, material:flareMat};
-		var scenes = {emoji:undefined, question:undefined};
+		var scenes = {};
+		var mainBkg;
 		
 		var settings = {};
 
@@ -58,21 +62,34 @@ if (Meteor.isClient) {
 			var tickerCursor = TickerItems.find({'cyclesRemaining':{$gt:0}});
 				
 			setTimeout( function(){
+				
+			    mainBkg = new BackgroundScene();
+			    scene.add(mainBkg);
+				
 				ticker = new Ticker( sceneWidth, tickerCursor.fetch(), SystemSettings.findOne({name:'tickerStatus'}).value == 'on' );
 				ticker.position.y = -80;
 				scene.add(ticker);
 	
+				scenes.titleScene = new TitleScene(flare);
+				scene.add(scenes.titleScene);
+	
 			    scenes.emoji = new EmojiTimesTwo(3000, 80, 100, 3);
 			    scene.add(scenes.emoji);
+			    
 			    scenes.question = new QuestionDisplay(flare);
+			    scene.add(scenes.question);
+			    
+
+			    
+			    
 			    var activeSceneSetting = SystemSettings.findOne({name:'activeScene'});
-			    SystemSettings.update( activeSceneSetting._id, {$set: {value:''}} );
+			    SystemSettings.update( activeSceneSetting._id, {$set: {value:'titleScene'}} );
 			    var questionModeSetting = SystemSettings.findOne({name:'questionMode'});
 			    SystemSettings.update( questionModeSetting._id, {$set: {value:'question'}} );
 			    var emojiModeSetting = SystemSettings.findOne({name:'emojiMode'});
 			    SystemSettings.update( emojiModeSetting._id, {$set: {value:'full'}} );
 
-			    scene.add(scenes.question);
+			    
 		    }, 4000);
 		    
 		    setTimeout( function(){
@@ -136,11 +153,6 @@ if (Meteor.isClient) {
 			    var activeQuestion = Questions.findOne(activeQuestionId);
 			    scenes.question.setQuestion(activeQuestion);
 		    }, 10000);
-		    
-			
-			var backgroundScene = new BackgroundScene(flare);
-			backgroundScene.position.z;
-			scene.add(backgroundScene);
 			
 		    //var bkgGeom = new THREE.PlaneBufferGeometry(6000, 200);
 		    //var bkgMat = new THREE.MeshBasicMaterial({map:THREE.ImageUtils.loadTexture('/img/wall_bkg.jpg')});
@@ -233,6 +245,11 @@ if (Meteor.isClient) {
 					}
 					if (scenes[newSetting.value]){
 						scenes[newSetting.value].reveal(.5);
+					}
+					if ( oldSetting.value == 'titleScene' ){
+						mainBkg.reveal();
+					} else if ( newSetting.value == 'titleScene' ){
+						mainBkg.hide();
 					}
 					break;
 				case 'questionMode':
