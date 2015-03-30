@@ -96,7 +96,7 @@ var ValueNumberGenerator = function() {
     var pctCss = {'display':'inline-block',
 	    	   'fontSize':'18px',
 	    	   'fontFamily':'Swiss',
-	    	   'color':'white'
+	    	   'color':'white',
     };
 
 	var numPlanes = [];

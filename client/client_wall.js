@@ -3,8 +3,8 @@ if (Meteor.isClient) {
 	  // This code only runs on the client
 		var scene, renderer;
 		var ticker;
-		var renderWidth = 1280 * 2;
-		var renderHeight = 720;
+		var renderWidth = 1920 * 2;
+		var renderHeight = 1080;
 		var realWidth = 36225;
 		var realHeight = 900;
 		var realAspect = realWidth / realHeight;

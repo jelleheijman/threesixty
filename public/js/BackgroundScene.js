@@ -40,6 +40,7 @@ var TitleScene = function( flare ) {
 	var glassRight = new THREE.Mesh(glassGeom, glassMat);
 	glassLeft.position.set(-1200, 0, -600);
 	glassRight.position.set(1200, 0, -600);
+	this.add(glassLeft, glassRight);
 
     //// LOAD COLUMN MAPS
 	var loader = new THREE.OBJMTLLoader();
@@ -61,13 +62,13 @@ var TitleScene = function( flare ) {
 		europeMapLeft.add(obj.children[0].clone());
 		europeMapLeft.add(obj.children[1].clone());
 		europeMapLeft.rotation.set (.2, .2, 0);
-		europeMapLeft.position.set(-2000, 0 , -1500);
+		europeMapLeft.position.set(-1500, 0 , -1500);
 		
 		europeMapRight = new THREE.Object3D();
 		europeMapRight.add(obj.children[0].clone());
 		europeMapRight.add(obj.children[1].clone());
 		europeMapRight.rotation.set(.2, -.2, 0);
-		europeMapRight.position.set(2000, 0 , -1500);
+		europeMapRight.position.set(1500, 0 , -1500);
 
 		that.add(europeMapLeft);
 		that.add(europeMapRight);
@@ -123,18 +124,16 @@ var TitleScene = function( flare ) {
 	}
 	this.reveal = function(){
 		that.visible = true;
-		TweenLite.killTweensOf(blob1.position);
-		TweenLite.killTweensOf(blob2.position);
-		TweenLite.killTweensOf(glassLeft.position);
-		TweenLite.killTweensOf(glassRight.position);
-		TweenLite.killTweensOf(titleFlare.position);
-		TweenLite.to(glassLeft.position, 1, {x:-3500});
-		TweenLite.to(glassRight.position, 1, {x:3500});
+		TweenLite.to(glassLeft.position, 1, {x:-1200, delay:.5});
+		TweenLite.to(glassRight.position, 1, {x:1200, delay:.5});
 		
-		TweenLite.to(title.scale, 1, {x:60, y:60, z:60});
-		TweenLite.to(title.rotation, 1, {x:Math.PI*2/4, y:Math.PI});
-		TweenLite.to( titleFlare.scale, 1, {x:350, y:15} );
-		TweenLite.to( titleFlare.position, 1, {x:100, y:60, z:-400} );
+		TweenLite.to(title.scale, 1, {x:60, y:60, z:60, delay:.5});
+		TweenLite.to(title.rotation, 1, {x:Math.PI*2/4, y:Math.PI, delay:.5});
+		TweenLite.to( titleFlare.scale, 1, {x:350, y:15, delay:.5} );
+		TweenLite.to( titleFlare.position, 1, {x:100, y:60, z:-400, delay:.5, onComplete:function(){
+    		moveEffectsA();
+		}} );
+		
 	}
 	
 	function moveEffectsA(){

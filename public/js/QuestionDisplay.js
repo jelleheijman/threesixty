@@ -114,7 +114,9 @@ var QuestionDisplay = function( flare ) {
 				question.visible = false;
 			}} );
 			answerBox.reveal(dur/2, dur/2);
-			
+			TweenLite.to( flare2.scale, dur/2, {x:1, y:1, onComplete:function(){
+    			flare2.visible = false;
+			}});
 			TweenLite.to( questionLeft.position, dur/2, {x:questionLeftPos});
 			TweenLite.to( questionRight.position, dur/2, {x:questionRightPos});
 		} else if (mode == 'question'){
@@ -122,6 +124,8 @@ var QuestionDisplay = function( flare ) {
 			TweenLite.to( question.rotation, dur/2, {x:0, delay:dur/4, onStart:function(){
 				question.visible = true;
 			}});
+			flare2.visible = true;
+			TweenLite.to( flare2.scale, dur/2, {x:questionWidth, y:50});
 			TweenLite.to( questionLeft.position, dur/2, {x:questionLeftOff});
 			TweenLite.to( questionRight.position, dur/2, {x:questionRightOff});			
 		}
@@ -138,6 +142,8 @@ var QuestionDisplay = function( flare ) {
 			flare2.scale.x = 200;
 			flare1.position.x = -3500;
 			flare2.position.x = 3500;
+			flare1.visible = true;
+			flare2.visible = true;
 			question.visible = false;
 			that.visible = true;
 			TweenLite.to(flare1.position, .5, {x:0, ease:Linear.easeInOut});
@@ -146,6 +152,9 @@ var QuestionDisplay = function( flare ) {
 						question.visible = true;
 						TweenLite.from(question.rotation, .5, {x:Math.PI*2 * .75});
 						TweenLite.to(flare1.position, .2, {x:-500, y:30, ease:Linear.easeInOut});
+						TweenLite.to(flare1.scale, .2, {x:1, y:1, ease:Linear.easeInOut, onComplete:function(){
+    						flare1.visible = false;
+						}});
 						
 						//TweenLite.to(flare1.scale, .2, {x:2, y:2});
 						TweenLite.to(flare2.scale, .2, {x:questionWidth*2, y:questionHeight, onComplete:function(){

@@ -32,7 +32,7 @@ var DomPlane = function( html, css ) {
 		}
 
 		document.body.appendChild(domElement);
-		var width = $(domElement).width() * 1.05;
+		var width = $(domElement).width() + 5;
 		var height = $(domElement).height();	
 		
 		html2canvas(domElement, {

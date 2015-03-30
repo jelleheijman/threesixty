@@ -1,7 +1,7 @@
 var Emoji = function( id, backerGeom, backerMat, emojiGeom, emojiMat, homePosition ) {
     THREE.Object3D.apply(this);
 
-    var scale = 20;
+    var scale = 34;
     var that=this;
     this.mood = 'neutral';
     this.rotation.x = Math.PI*2/4;

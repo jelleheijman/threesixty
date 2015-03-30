@@ -101,8 +101,8 @@ var Emojis = function( width, height, numEmoji, numRows, emojiBackerGeom, emojiG
 	var emojiDiameter = 43;
     var emojiSizeFullWidth = 87.85;
     var emojiSizeSquishedWidth = 56;
-    var emojiSizeFullHeight = 48;
-    var emojiSizeSquishedHeight = 48;
+    var emojiSizeFullHeight = 53;
+    var emojiSizeSquishedHeight = 53;
     
     var numCols = numEmoji / numRows;
     
