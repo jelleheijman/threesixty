@@ -12,7 +12,7 @@ var Emoji = function( id, backerGeom, backerMat, emojiGeom, emojiMat, homePositi
     backer.rotation.x = -Math.PI*2/4;
     var emoji = new THREE.Mesh(emojiGeom, emojiMat);
     emoji.rotation.x = -Math.PI*2/4;
-    emoji.position.y = .8;
+    emoji.position.y = .3;
     
     this.add(backer);
     this.add(emoji);
