@@ -173,6 +173,9 @@ if (Meteor.isClient) {
 			if (scenes.question){
 				scenes.question.tick();
 			}
+			if (scenes.emoji){
+				scenes.emoji.tick();
+			}
 			render();
 			requestAnimationFrame( animate );
 		}
