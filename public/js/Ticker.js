@@ -50,7 +50,7 @@ var Ticker = function( sceneWidth, initialData, active ) {
 			}
 			var len = displayItems.length;
 			for (var i=0; i<len; i++){
-				displayItems[i].updatePosition(-5);
+				displayItems[i].updatePosition(-1);
 				// WHAT TO DO IF A ITEM HAS GONE OFF THE END..
 				if ( displayItems[i].finished ) {
 					that.remove( displayItems[i].mesh );
