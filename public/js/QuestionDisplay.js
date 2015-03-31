@@ -91,7 +91,11 @@ var QuestionDisplay = function( flare ) {
 			}
 		}
 		if (answers.length > 1) {
-			answerBox.setAnswers(answers);
+			answerBox.addEventListener('ready', function(){
+				setTimeout( function(){
+					answerBox.setAnswers(answers);
+				}, 1000)
+			});
 		}
 	}
 	

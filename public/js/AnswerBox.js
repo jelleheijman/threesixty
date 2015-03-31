@@ -23,6 +23,7 @@ var AnswerBox = function( ) {
 				that.add( thisAnswer );
 				answers.push( thisAnswer );
 			}
+			that.dispatchEvent(new Event('ready'));
 		}, 3000);
 	}
 	
