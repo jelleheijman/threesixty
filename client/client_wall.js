@@ -2,7 +2,7 @@ if (Meteor.isClient) {
 	Template.wall.rendered = function(){
 	  // This code only runs on the client
 		var scene, renderer;
-		var ticker;
+		//var ticker;
 		var renderWidth = 1920 * 2;
 		var renderHeight = 1080;
 		var realWidth = 36225;
@@ -59,16 +59,16 @@ if (Meteor.isClient) {
 		    $("body").css('overflow', 'hidden');
 		    $('.forceFontLoad').remove();
 			    
-			var tickerCursor = TickerItems.find({'cyclesRemaining':{$gt:0}});
+			//var tickerCursor = TickerItems.find({'cyclesRemaining':{$gt:0}});
 				
 			setTimeout( function(){
 				
 			    mainBkg = new BackgroundScene();
 			    scene.add(mainBkg);
 				
-				ticker = new Ticker( sceneWidth, tickerCursor.fetch(), SystemSettings.findOne({name:'tickerStatus'}).value == 'on' );
-				ticker.position.y = -80;
-				scene.add(ticker);
+				//ticker = new Ticker( sceneWidth, tickerCursor.fetch(), SystemSettings.findOne({name:'tickerStatus'}).value == 'on' );
+				//ticker.position.y = -80;
+				//scene.add(ticker);
 	
 				scenes.titleScene = new TitleScene(flare);
 				scene.add(scenes.titleScene);
@@ -77,6 +77,12 @@ if (Meteor.isClient) {
 			    scene.add(scenes.emoji);
 			    
 			    scenes.question = new QuestionDisplay(flare);
+			    scenes.question.addEventListener('ready', function(){
+				    // SET THE QUESTION DISPLAY TO THE ACTIVE QUESTION
+				    var activeQuestionId = SystemSettings.findOne({name:'activeQuestion'}).value;
+				    var activeQuestion = Questions.findOne(activeQuestionId);
+				    scenes.question.setQuestion(activeQuestion);	    
+			    });
 			    scene.add(scenes.question);
 			    
 
@@ -93,6 +99,7 @@ if (Meteor.isClient) {
 		    }, 4000);
 		    
 		    setTimeout( function(){
+				/*
 				var initializingTicker = true;
 				var tickerObserver = tickerCursor.observe({
 			            addedAt: function(tickerItem, index, before){
@@ -111,7 +118,7 @@ if (Meteor.isClient) {
 			            }
 			        });
 			    initializingTicker = false;
-			    
+			    */
 				var settingsCursor = SystemSettings.find({});
 				var initializingSettings = true;
 				var settingsOberver = settingsCursor.observe({
@@ -121,7 +128,6 @@ if (Meteor.isClient) {
 		            changed: function(newSettingsItem, oldSettingsItem){
 						updateSettings(newSettingsItem, oldSettingsItem);
 		            },
-	
 			    });
 			    initializingSettings = false;
 			    
@@ -147,12 +153,6 @@ if (Meteor.isClient) {
 		    }, 6000);
 		    
 		    
-		    setTimeout( function(){
-			    // SET THE QUESTION DISPLAY TO THE ACTIVE QUESTION
-			    var activeQuestionId = SystemSettings.findOne({name:'activeQuestion'}).value;
-			    var activeQuestion = Questions.findOne(activeQuestionId);
-			    scenes.question.setQuestion(activeQuestion);
-		    }, 10000);
 			
 		    //var bkgGeom = new THREE.PlaneBufferGeometry(6000, 200);
 		    //var bkgMat = new THREE.MeshBasicMaterial({map:THREE.ImageUtils.loadTexture('/img/wall_bkg.jpg')});
@@ -167,9 +167,9 @@ if (Meteor.isClient) {
 	    
 
 		function animate() {
-			if (ticker){
-				ticker.update();
-			}
+			//if (ticker){
+			//	ticker.update();
+			//}
 			if (scenes.question){
 				scenes.question.tick();
 			}
@@ -229,13 +229,13 @@ if (Meteor.isClient) {
 		function updateSettings(newSetting, oldSetting){
 			settings[newSetting.name] = newSetting.value;
 			switch (newSetting.name){
-				case 'tickerStatus':
-					if (newSetting.value == 'on' && ticker.active === false){
-						ticker.turnOn();
-					} else if (newSetting.value == 'off' && ticker.active === true){
-						ticker.turnOff();
-					}
-					break;
+				//case 'tickerStatus':
+				//	if (newSetting.value == 'on' && ticker.active === false){
+				//		ticker.turnOn();
+				//	} else if (newSetting.value == 'off' && ticker.active === true){
+				//		ticker.turnOff();
+				//	}
+				//	break;
 				case 'activeQuestion':
 					var newQuestion = Questions.findOne( newSetting.value );
 					scenes.question.setQuestion( newQuestion );
