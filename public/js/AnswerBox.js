@@ -28,7 +28,6 @@ var AnswerBox = function( ) {
 	}
 	
 	this.setAnswers = function( newAnswers ){
-		console.log('setanswers', newAnswers);
 		var setting = settings[newAnswers.length];
 		var yTrack = setting.startY;
 		for (var i=0; i<answers.length; i++){
@@ -43,7 +42,6 @@ var AnswerBox = function( ) {
 		}
 	}
 	this.updateAnswers = function( newAnswer ){
-		console.log('updateAnswers', newAnswer)
 		for (var i=0; i<answers.length; i++){
 			answers[i].updateAnswer( newAnswer['result' + (i+1).toString()] );
 		}
@@ -86,13 +84,7 @@ var AnswerBox = function( ) {
 AnswerBox.prototype = Object.create(THREE.Object3D.prototype);
 AnswerBox.prototype.constructor = AnswerBox;
 
-var AnswerQuestion = function() {
-    THREE.Object3D.apply(this);
-	var that = this;    
-}
 
-AnswerQuestion.prototype = Object.create(THREE.Object3D.prototype);
-AnswerQuestion.prototype.constructor = AnswerQuestion;
 
 
 var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
@@ -106,7 +98,7 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
     
     this.percent;
     this.votes;
-    this.onScreen = false;
+	var needsUpdate = true;
     
     this.setAnswer = function( answerData, scale, barSize ){
 	    answerText = answerData.answer;
@@ -125,6 +117,7 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
     this.updateAnswer = function ( answerData ) {
 	    that.percent = answerData.percent;
 	    that.votes = answerData.votes;
+	    needsUpdate = true;
     }
     
     
@@ -164,14 +157,17 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
     }
     
     var barPad = .03;
+    
     setInterval( function(){
-	    if ( (that.percent || that.percent === 0) && bar.scale.x != that.percent + barPad ){
+	    if ( (that.percent || that.percent === 0) && needsUpdate ){
 		    TweenLite.to(bar.scale, 1, {x:that.percent + barPad});
 		    TweenLite.to(valueNumber.position, 1, {x:-600 + meshWidth * (that.percent+.03) + 84, onUpdate:function(){
 			    valueNumber.setNum( bar.scale.x - barPad > .001 ? bar.scale.x - barPad : 0 );
+			    needsUpdate = false;
 		    }});
 	    }
     }, 1010);
+    
 }
 Answer.prototype = Object.create(THREE.Object3D.prototype);
 Answer.prototype.constructor = Answer;
