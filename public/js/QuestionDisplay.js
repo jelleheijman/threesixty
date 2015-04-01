@@ -4,36 +4,27 @@ var QuestionDisplay = function( flare ) {
 
 	this.mode;
 
-	var answerBox = new AnswerBox();
-	answerBox.addEventListener('ready', function(e){
-		setTimeout( function(){
-			that.dispatchEvent(e);
-		}, 100)		
-	});
-	this.add(answerBox);
-
-	var questionFontSize = 50;
-	var sideQuestionScale = .6;
-	var questionLeftPos = -2900;
-	var questionRightPos = 2900;
-	var questionLeftOff = -4000;
-	var questionRightOff = 4000;
-	var questionWidth, questionHeight;
-	var questionData;
-	var questionNeedsUpdate = false;
 	
+	var questionFontSize = 50;			/// THAT'S THE BIG QUESTION IN THE MIDDLE
+	var sideQuestionScale = .6;			/// FOR THE SIDE QUESTIONS, WE'LL SHRINK THEM DOWN BY THEIS MUCH
+	var questionLeftPos = -2400;		/// SIDE QUESTION X POSITIONS, FAR ENOUGH INSIDE TO LEAVE ROOM FOR THE MINI RESULTS BOXES AT THE VERY EDGES
+	var questionRightPos = 2400;
+	var questionLeftOff = -4000;		/// OFFSCREEN POSITION FOR THE SIDE QUESTIONS AND ANSWERS
+	var questionRightOff = 4000;
+	var answerLeftPos = -2700;			/// POSITIONS FOR THE MINI ANSWER BOXES AT THE SIDES
+	var answerRightPos = 2900;
+	var questionWidth, questionHeight;	/// WE'LL NEED THIS LATER TO POSITION THE 3D QUESTION TEXT
+	var questionData;					/// WE'LL HANG ONTO THE QUESTION DATA THAT'S PASSED IN SINCE WE DONT' WANT TO ACTUALLY UPDATE EVERY SINGLE TIME
+	var questionNeedsUpdate = false;	/// WE'LL SET THIS TO TRUE WHEN WE GET NEW DATA, THEN CHECK IT EVERY SO OFTEN.  WOULDN'T WANT TO BE TWEENING STUFF ON FREQUENT UPDATES
 	
 	// CREATE CENTER QUESTION MESH
 	var questionMat = new THREE.MeshLambertMaterial({color:0xFFFFFF});
 	var questionMesh = new THREE.Mesh(new THREE.Geometry(), questionMat);
-	
-
 	var question = new THREE.Object3D();
 	question.visible = false;
-
 	question.add(questionMesh);
 	this.add(question);
-	
+
 	// CREATE SIDE QUESTION MESHES
 	var questionMeshLeft = new THREE.Mesh(questionMesh.geometry.clone(), questionMat);
 	var questionMeshRight = new THREE.Mesh(questionMesh.geometry.clone(), questionMat);
@@ -48,11 +39,28 @@ var QuestionDisplay = function( flare ) {
 	this.add(questionLeft);
 	this.add(questionRight);
 	
+	/// CREATE THE MAIN ANSWER BOX
+	var answerBox = new AnswerBox();
+	answerBox.addEventListener('ready', function(e){
+		setTimeout( function(){
+			that.dispatchEvent(e);
+		}, 100)		
+	});
+	this.add(answerBox);	
+
+	/// CREATE THE SIDE ANSWER BOXES
+	var answerBoxLeft = new AnswerBoxMini();
+	answerBoxLeft.position.x = questionLeftOff;
+	this.add(answerBoxLeft);
+	
+	var answerBoxRight = new AnswerBoxMini();
+	answerBoxRight.position.x = questionRightOff;
+	this.add(answerBoxRight);
+	
+	
 	// SET UP FLARES
 	var flare1 = new THREE.Mesh(flare.geometry, flare.material);
 	var flare2 = new THREE.Mesh(flare.geometry, flare.material);
-	this.add(flare1, flare2);
-	
 	flare1.position.x = -3500;
 	flare2.position.x = 3500;
 	flare1.position.z = 50;
@@ -61,44 +69,47 @@ var QuestionDisplay = function( flare ) {
 	flare1.scale.x = 200;
 	flare2.scale.y = 100;
 	flare2.scale.x = 200;
+	this.add(flare1, flare2);
 
+	/// THIS GETS CALLED BY THE ROOT WALL PAGE WHEN IT SEES THE ACTIVE QUESTION HAS BEEN CHANGED
 	this.setQuestion = function(_questionData){
 		questionData = _questionData;
+		/// WE'LL TRY TO COMPLETELY WIPE OUT THE PREVIOUS QUESTION GEOMETRY SO WE DON'T LEAK MEMORY
 		questionMesh.geometry.dispose();
+		/// SET THE GEOMETRY TO THE NEW QUESTION
 		questionMesh.geometry = getText(questionData.questionText.toUpperCase());
 		questionMesh.geometry.needsUpdate = true;
+		/// SET THE WIDTH BASED ON THE NEW BOUNDING BOX
 		questionMesh.geometry.computeBoundingBox();		
-		
 		questionWidth = questionMesh.geometry.boundingBox.max.x - questionMesh.geometry.boundingBox.min.x;
 		questionHeight = questionMesh.geometry.boundingBox.max.y - questionMesh.geometry.boundingBox.min.y;
-
+		/// CENTER THE QUESTION
 		questionMesh.position.x = -questionWidth/2;
 		questionMesh.position.y = -questionHeight/2;
 		
-		//questionBacker.scale.x = 500;//questionWidth + 30;
-		//questionBacker.scale.y = 500;//questionHeight + 10;
-		flare1.scale.x = questionWidth;
-		flare2.scale.x = questionWidth;
-		
+		/// AND CREATE THE SIDE QUESTIONS ALSO.  THESE WILL COME ON WHEN THE BIG QUESTION GOES AWAY TO REVEAL THE ANSWERS
 		questionMeshLeft.geometry.dispose();
 		questionMeshLeft.geometry = questionMesh.geometry.clone();
 		questionMeshLeft.geometry.needsUpdate = true;
-		
 		questionMeshRight.geometry.dispose();
 		questionMeshRight.geometry = questionMesh.geometry.clone();
 		questionMeshRight.geometry.needsUpdate = true;
-		
+		/// AND POSITION THEM, THE RIGHT ONE RIGHT JUSTIFIED
 		questionMeshRight.position.x = - questionWidth * sideQuestionScale;
 		questionMeshLeft.position.x = 0;
 		
+		/// RUN THRU ALL THE POSSIBLE ANSWERS FOR THIS QUESTION AND CREATE AN ARRAY OF THEIR DATA
 		var answers = [];
 		for (var i=1; i<=6; i++){
 			if (questionData['answer' + i.toString()]){
 				answers.push( {answer:questionData['answer' + i.toString()], result:questionData['result' + i.toString()]} );
 			}
 		}
+		/// AND ASSUMING WE HAVE ANSWERS, LET'S SET THEM TO THE CURRENT ANSWERS
 		if (answers.length > 1) {
 			answerBox.setAnswers(answers);
+			answerBoxLeft.setAnswers(answers);
+			answerBoxRight.setAnswers(answers);
 		}
 	}
 	
@@ -112,6 +123,8 @@ var QuestionDisplay = function( flare ) {
 				var activeQuestion = SystemSettings.findOne({name:'activeQuestion'}).value;
 				if ( questionData._id == activeQuestion ) {
 					answerBox.updateAnswers(questionData);
+					answerBoxLeft.updateAnswers(questionData);
+					answerBoxRight.updateAnswers(questionData);
 				}
 				questionNeedsUpdate = false;
 			}
@@ -134,6 +147,8 @@ var QuestionDisplay = function( flare ) {
 			}});
 			TweenLite.to( questionLeft.position, dur/2, {x:questionLeftPos});
 			TweenLite.to( questionRight.position, dur/2, {x:questionRightPos});
+			TweenLite.to( answerBoxLeft.position, dur/2, {x:answerLeftPos});
+			TweenLite.to( answerBoxRight.position, dur/2, {x:answerRightPos});
 		} else if (mode == 'question'){
 			answerBox.hide( dur/2, 0 );
 			TweenLite.to( question.rotation, dur/2, {x:0, delay:dur/4, onStart:function(){
@@ -142,7 +157,9 @@ var QuestionDisplay = function( flare ) {
 			flare2.visible = true;
 			TweenLite.to( flare2.scale, dur/2, {x:questionWidth, y:50});
 			TweenLite.to( questionLeft.position, dur/2, {x:questionLeftOff});
-			TweenLite.to( questionRight.position, dur/2, {x:questionRightOff});			
+			TweenLite.to( questionRight.position, dur/2, {x:questionRightOff});		
+			TweenLite.to( answerBoxLeft.position, dur/2, {x:questionLeftOff});
+			TweenLite.to( answerBoxRight.position, dur/2, {x:questionRightOff});	
 		}
 	}
 	
