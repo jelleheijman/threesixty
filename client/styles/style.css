@@ -104,3 +104,11 @@ table.table-striped tr td.disconnected{
 	color:white;
 	background-color:#AA0000;
 }
+.swatch{
+	display:inline-block;
+	width:20px;
+	height:20px;
+	margin:5px;
+	border:solid black 1px;
+	margin-top:8px;
+}

@@ -54,16 +54,18 @@ if (Meteor.isClient) {
 		Session.set('deviceid', 'controller_device_connections');
 		this.render('controllerDeviceConnections');
 	});
-	Router.route('/controller_questions', function(){
-		Session.set('deviceid', 'controller_questions');
-		this.render('controllerQuestions');
+	Router.route('/controller_questions', {
+		action:function(){
+			Session.set('deviceid', 'controller_questions');
+			this.render('controllerQuestions');
+		}
 	});
 	Router.route('/wall', {
 	    onBeforeAction: function(){
 	        var libsLoaded = false;
 			var threejs = IRLibLoader.load('/js/three.js', {
 				success: function(){ },
-				error: function(){ }
+				error: function(e){ console.log(e); }
 			});
 			if(threejs.ready() && !libsLoaded){
 			    libsLoaded = true;
@@ -71,7 +73,6 @@ if (Meteor.isClient) {
 				var b = IRLibLoader.load('/js/ReconnectingWebSocketNew.js', {error:function(e){console.log(e);}});
 				var c = IRLibLoader.load('/js/TweenMax.min.js', {error:function(e){console.log(e);}});
 				var d = IRLibLoader.load('/js/EasePack.min.js', {error:function(e){console.log(e);}});
-				//var e = IRLibLoader.load('/js/Ticker.js', {error:function(e){console.log(e);}});
 				var f = IRLibLoader.load('/js/DomPlane.js', {error:function(e){console.log(e);}});
 				var g = IRLibLoader.load('/js/Emojis.js', {error:function(e){console.log(e);}});
 				var h = IRLibLoader.load('/js/Emoji.js', {error:function(e){console.log(e);}});
@@ -85,9 +86,10 @@ if (Meteor.isClient) {
 				}
 				var m = IRLibLoader.load('/fonts/swis721_bt_bold.typeface.js', {error:function(e){console.log(e);}});
 				var n = IRLibLoader.load('/js/AnswerBox.js', {error:function(e){console.log(e);}});
+				var n2 = IRLibLoader.load('/js/AnswerBoxMini.js', {error:function(e){console.log(e);}});
 				var o = IRLibLoader.load('/js/BackgroundScene.js', {error:function(e){console.log(e);}});
 				
-				if(a.ready() && b.ready() && c.ready() & d.ready() && /*e.ready() &*/ f.ready() && g.ready() && h.ready() && h2.ready() && i.ready() && j.ready() && k.ready() && l.ready() && m.ready() && n.ready() && o.ready()){
+				if(a.ready() && b.ready() && c.ready() & d.ready() && f.ready() && g.ready() && h.ready() && h2.ready() && i.ready() && j.ready() && k.ready() && l.ready() && m.ready() && n.ready() && n2.ready() && o.ready()){
 					this.next();
 				}
 			}

@@ -1,9 +1,12 @@
 if (Meteor.isClient) {
+	
+	var colorOptions = [ '#FF0000', '#009900', '#777777', '#D50000', '#0087DC', '#FDBB30', '#FFF95D', '#EFE600',  ];
+	
 	Template.controllerQuestions.helpers({
 		questions: function(){
 			var activeQuestion = SystemSettings.findOne({name:'activeQuestion'});
 			var questions = Questions.find().fetch();
-			if (activeQuestion){
+			if ( questions && activeQuestion){
     			for (var i=0; i<questions.length; i++){
     				if (questions[i]._id == activeQuestion.value){
     					questions[i].isActive = true;
@@ -13,6 +16,9 @@ if (Meteor.isClient) {
     			}
 			}
 			return questions;
+		},
+		colorOptions:function(){
+			return colorOptions;
 		},
 		questionData:function(key, which){
 			return Session.get(which) ? Session.get(which)[key] : null;		
@@ -35,77 +41,77 @@ if (Meteor.isClient) {
     		}
 		},
 		answerPercent: function(answer){
-            var ipads = Connections.find({type:'ipad'}).fetch();
-            var votesForThisAnswer = 0;
-            var total = 0;
-            for (var i=0; i<ipads.length; i++){
-                for (var j=0; j<ipads[i].answers.length; j++){
-                    if (ipads[i].answers[j].question == Session.get('viewQuestion')._id){
-                        
-                        var thisAnswer = ipads[i].answers[j].answer;
-                        if (thisAnswer){
-                            total++;
-                        }
-                        if (thisAnswer == answer){
-                            votesForThisAnswer++;
-                        }
-                    }
-                }
+			if (Session.get('viewQuestion')) {
+	            var ipads = Connections.find({type:'ipad'}).fetch();
+	            var votesForThisAnswer = 0;
+	            var total = 0;
+	            for (var i=0; i<ipads.length; i++){
+	                for (var j=0; j<ipads[i].answers.length; j++){
+	                    if (ipads[i].answers[j].question == Session.get('viewQuestion')._id){
+	                        
+	                        var thisAnswer = ipads[i].answers[j].answer;
+	                        if (thisAnswer){
+	                            total++;
+	                        }
+	                        if (thisAnswer == answer){
+	                            votesForThisAnswer++;
+	                        }
+	                    }
+	                }
+	            }
+	            if (total > 0){
+	                return (votesForThisAnswer / total * 100).toFixed(1);
+	            }   
             }
-            if (total > 0){
-                return (votesForThisAnswer / total * 100).toFixed(1);
-            }   
 		}
 	});
 	Template.controllerQuestions.events({
 		'click #addQuestion':function(event, template){
 			Session.set('editQuestion', 'new');
+			
 		},
 		'submit form': function(event, template){
-			if (event.target.questionText.value.length > 5){
+			if (event.target.questionText.value.length > 1){
 				
-				var newVals = {		questionText:event.target.questionText.value,
-									answer1:event.target.answer1.value,
-									answer2:event.target.answer2.value,
-									answer3:event.target.answer3.value,
-									answer4:event.target.answer4.value,
-									answer5:event.target.answer5.value,
-									answer6:event.target.answer6.value,
-									
-								};
+				var newVals = {	questionText:event.target.questionText.value };
+				
+
+
+				for (var i=1; i<=6; i++) {
+					newVals['answer' + i.toString()] = event.target['answer' + i.toString()]['value'];	
+					newVals['answerColor' + i.toString()] = event.target['answerColor' + i.toString()]['value'];	
+				}
+
+
 				var editQuestion = Session.get('editQuestion');
 				if ( editQuestion == 'new' ){
-					newVals.result1 = {votes:0, percent:0},
-					newVals.result2 = {votes:0, percent:0},
-					newVals.result3 = {votes:0, percent:0},
-					newVals.result4 = {votes:0, percent:0},
-					newVals.result5 = {votes:0, percent:0},
-					newVals.result6 = {votes:0, percent:0},
+					for (i=1; i<=6; i++) {
+						newVals['result' + i.toString()] = {votes:0, percent:0};
+					}
 				    Questions.insert( newVals );
 				} else {
 					Questions.update( editQuestion._id, {$set:newVals} );
 				}
+				
 				event.target.questionText.value = '';
-				event.target.answer1.value = '';
-				event.target.answer2.value = '';
-				event.target.answer3.value = '';
-				event.target.answer4.value = '';
-				event.target.answer5.value = '';
-				event.target.answer6.value = '';
+				for (i=1; i<=6; i++){
+					event.target['answer' + i.toString()].value = '';
+					event.target['answerColor' + i.toString()].value = '#FF0000';
+				}
+				
 			}
 			Session.set('editQuestion', undefined);
-			
 			event.preventDefault();
-			return false;
+			return false;			
+			
 		},
 		'click .closeButton':function(event, template){
 			$('form [name="questionText"]').val('');
-			$('form [name="answer1"]').val('');
-			$('form [name="answer2"]').val('');
-			$('form [name="answer3"]').val('');
-			$('form [name="answer4"]').val('');
-			$('form [name="answer5"]').val('');
-			$('form [name="answer6"]').val('');
+			
+			for(i=1; i>=6; i++){
+				$('form [name="answer1"]').val('');
+				$('form [name="answerColor' + i.toString() + '"]').val('#FF0000');
+			}
 			Session.set('editQuestion', undefined);
 			Session.set('viewQuestion', undefined);
 		}
