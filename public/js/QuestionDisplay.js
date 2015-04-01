@@ -113,8 +113,9 @@ var QuestionDisplay = function( flare ) {
 				if ( questionData._id == activeQuestion ) {
 					answerBox.updateAnswers(questionData);
 				}
+				questionNeedsUpdate = false;
 			}
-			questionNeedsUpdate = false;
+			
 		}
 	}, 2000);
 	
