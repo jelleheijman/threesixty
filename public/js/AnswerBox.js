@@ -59,14 +59,9 @@ var AnswerBox = function( ) {
     }
     
     this.tick = function(){
-	    if (answers[0]){
-		    answers[0].tick();
-		    answers[1].tick();
-		    answers[2].tick();
-		    answers[3].tick();
-		    answers[4].tick();
-		    answers[5].tick();		    
-		}
+	    for (var i=0; i<answers.length; i++){
+		    answers[i].tick();
+	    }
     }
     
     /*
@@ -100,6 +95,9 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
     this.votes;
     
     this.setAnswer = function( answerData, scale, barSize ){
+	    
+	    //// TODO:  NEED TO BE SURE WE FULLY FREE MEMORY FROM THE PREVIOUS ANSWER, IF ANY, BEFORE CREATING NEW.
+	    
 	    answerText = answerData.answer;
 	    that.percent = answerData.result.percent;
 	    that.votes = answerData.result.votes;
@@ -111,7 +109,7 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
 	    }
 	    bar.scale.x = that.percent;
 	    valueNumber.position.x = -600 + meshWidth * (that.percent+.03) + 84;
-	    valueNumber.setNum( that.percent - barPad > .001 ? that.percent : 0 );
+	    valueNumber.setNum( that.percent );
 	    //plane.setScale(scale);
     }
     
