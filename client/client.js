@@ -84,7 +84,6 @@ if (Meteor.isClient) {
 					l = IRLibLoader.load('/js/OBJMTLLoader.js', {error:function(e){console.log(e);}}); 
 				}
 				var m = IRLibLoader.load('/fonts/swis721_bt_bold.typeface.js', {error:function(e){console.log(e);}});
-				var m = IRLibLoader.load('/fonts/swis721_bt_bold.typeface.js', {error:function(e){console.log(e);}});
 				var n = IRLibLoader.load('/js/AnswerBox.js', {error:function(e){console.log(e);}});
 				var o = IRLibLoader.load('/js/BackgroundScene.js', {error:function(e){console.log(e);}});
 				
