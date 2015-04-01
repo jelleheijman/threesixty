@@ -98,7 +98,6 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
     
     this.percent;
     this.votes;
-	var needsUpdate = true;
     
     this.setAnswer = function( answerData, scale, barSize ){
 	    answerText = answerData.answer;
@@ -111,13 +110,20 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
 		    that.percent = .01;
 	    }
 	    bar.scale.x = that.percent;
+	    valueNumber.position.x = -600 + meshWidth * (that.percent+.03) + 84;
+	    valueNumber.setNum( that.percent - barPad > .001 ? that.percent : 0 );
 	    //plane.setScale(scale);
     }
     
     this.updateAnswer = function ( answerData ) {
 	    that.percent = answerData.percent;
 	    that.votes = answerData.votes;
-	    needsUpdate = true;
+	    TweenLite.to(bar.scale, 1, {x:that.percent + barPad});
+	    TweenLite.to(valueNumber.position, 1, {x:-600 + meshWidth * (that.percent+.03) + 84, onUpdate:function(){
+		    valueNumber.setNum( bar.scale.x - barPad > .001 ? bar.scale.x - barPad : 0 );
+	    }, onComplete: function(){
+		    valueNumber.setNum( that.percent );
+	    }});
     }
     
     
@@ -149,6 +155,7 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
     
     var valueNumber = valueNumberGenerator.createValueNumberArray();
     valueNumber.position.z = 20;
+    
     this.add(valueNumber);
     
     function planeReady(){
@@ -158,15 +165,7 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
     
     var barPad = .03;
     
-    setInterval( function(){
-	    if ( (that.percent || that.percent === 0) && needsUpdate ){
-		    TweenLite.to(bar.scale, 1, {x:that.percent + barPad});
-		    TweenLite.to(valueNumber.position, 1, {x:-600 + meshWidth * (that.percent+.03) + 84, onUpdate:function(){
-			    valueNumber.setNum( bar.scale.x - barPad > .001 ? bar.scale.x - barPad : 0 );
-			    needsUpdate = false;
-		    }});
-	    }
-    }, 1010);
+
     
 }
 Answer.prototype = Object.create(THREE.Object3D.prototype);
