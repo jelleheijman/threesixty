@@ -28,6 +28,7 @@ var AnswerBox = function( ) {
 	}
 	
 	this.setAnswers = function( newAnswers ){
+		console.log('setanswers', newAnswers);
 		var setting = settings[newAnswers.length];
 		var yTrack = setting.startY;
 		for (var i=0; i<answers.length; i++){
@@ -42,6 +43,7 @@ var AnswerBox = function( ) {
 		}
 	}
 	this.updateAnswers = function( newAnswer ){
+		console.log('updateAnswers', newAnswer)
 		for (var i=0; i<answers.length; i++){
 			answers[i].updateAnswer( newAnswer['result' + (i+1).toString()] );
 		}

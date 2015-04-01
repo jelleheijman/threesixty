@@ -3,6 +3,9 @@ var EmojiTimesTwo = function(width, height, numEmoji, numRows){
     var that = this;
     var left, right;
 	var status = 'full';
+	var chartNeedsUpdate = false;
+	var chartUpdateTimeout;
+	
  
 	var answerBox = new AnswerBox();
 	answerBox.addEventListener('ready', function(){
@@ -18,11 +21,11 @@ var EmojiTimesTwo = function(width, height, numEmoji, numRows){
 	});
 
 	this.add(answerBox);
-	
 	answerBox.hide();
  
  
     this.setEmoji = function(id, mood){
+	    chartNeedsUpdate = true;
         left.setEmoji(id, mood);
         right.setEmoji(id, mood);
     };
@@ -35,16 +38,28 @@ var EmojiTimesTwo = function(width, height, numEmoji, numRows){
 		    left.goFull(0.2);
 		    right.goFull(0.2);
 		    answerBox.hide(0.6, 0);
+		    clearTimeout(chartUpdateTimeout);
 	    } else if (setting == 'results'){
-		    var result = left.calcResults
 		    left.goResults();
 		    right.goResults();
 		    answerBox.updateAnswers( left.calcResults() );
 		    answerBox.reveal(0.6, 1);
-			
+			chartUpdateTimeout = setTimeout( updateChart, 2000 );
 	    } 
 	    status = setting;
     };
+    
+    function updateChart(){
+	    if (chartNeedsUpdate) {
+		    answerBox.updateAnswers( left.calcResults() );
+		    chartNeedsUpdate = false;
+	    }
+	    chartUpdateTimeout = setTimeout( function(){
+		    updateChart();
+		}, 5000 );	    
+    }
+    
+
     
     this.hide = function(){
 	    left.hide();
@@ -114,6 +129,7 @@ var Emojis = function( width, height, numEmoji, numRows, emojiBackerGeom, emojiG
     var emojis = []; 
 	var squishPositions = [];
 	var resultsUpdateTimeout;
+	var moods = [ ['thumbsup', 'happy'], ['neutral', 'neutral'], ['thumbsdown', 'sad']];
 	
 	var emojiDiameter = 43;
     var emojiSizeFullWidth = 87.85;
@@ -134,12 +150,14 @@ var Emojis = function( width, height, numEmoji, numRows, emojiBackerGeom, emojiG
 	    xTrackSquished = width - emojiSizeFullWidth - 50;
 	    xTrackFull = width - emojiSizeFullWidth;
     }
-
     
     var count = 1;
     
     for (var i=0; i<numCols; i++){
         for (var j=0; j<numRows; j++){
+	        if ( count > numEmoji ){
+		        break;
+	        }
             var emoji = new Emoji(count, emojiBackerGeom, backerMats.none, emojiGeom, emojiMats.neutral, new THREE.Vector2(xTrackFull, yTrackFull) );
             
             that.add(emoji);
@@ -191,31 +209,32 @@ var Emojis = function( width, height, numEmoji, numRows, emojiBackerGeom, emojiG
 		for (var i=1; i<emojis.length; i++){
 		    emojis[i].goHome(1, delay);
 	    }
-
     }
+    
     this.calcResults = function(){
-		var moodResults = getMoodsAndResults();
-		var moods = moodResults.mood;
-		var results = moodResults.results;
-	    for (var k=0; k<results.length; k++){
-		    if ( results[k].answer.toLowerCase() == emojis[j].mood ){
-			    results[k].result.vote ++;
+		var ret = { questionText:"", answer1:"", answer2:"", answer3:"", answer4:"", answer5:"", answer6:"",
+									 result1:{percent:0, votes:0}, result2:{percent:0, votes:0}, result3:{percent:0, votes:0},
+									 result4:{percent:0, votes:0}, result5:{percent:0, votes:0}, result6:{percent:0, votes:0}
+					};
+		for (var j=1; j<emojis.length; j++){
+		    for (var k=0; k<moods.length; k++){
+			    if ( emojis[j].mood == moods[k][0] || emojis[j].mood == moods[k][1]){
+				    ret['result' + (k+1).toString()]['votes']++;
+			    }
 		    }
+		}
+	    for ( k=0; k<=3; k++ ){
+		    ret['result' + (k+1).toString()]['percent'] = ret['result' + (k+1).toString()]['votes']/100;
 	    }
-	    for ( k=0; k<results.length; k++ ){
-		    results[k].result.percent = results[k].result.votes/100;
-	    }
-	    return results;
+	    return ret;
     }
     this.goResults = function(dur){
 	    dur = dur || 1.5;
-		var moodResults = getMoodsAndResults();
-		var moods = moodResults.moods;
-	    
 	    var positionCount = 0;
 	    for (var i=0; i < moods.length; i++){
 		    for (var j=1; j<emojis.length; j++){
-			    if ( emojis[j].mood == moods[i] && (emojis[j].x != squishPositions[positionCount].x || emojis[j].y != squishPositions[positionCount].y) ) {
+			    if ( (emojis[j].mood == moods[i][0] || emojis[j].mood == moods[i][1]) && 
+			    	 (emojis[j].x != squishPositions[positionCount].x || emojis[j].y != squishPositions[positionCount].y) ) {
 				    TweenLite.to(emojis[j].position, dur, {x:squishPositions[positionCount].x, y:squishPositions[positionCount].y});
 				    positionCount++;
 			    }
@@ -224,26 +243,7 @@ var Emojis = function( width, height, numEmoji, numRows, emojiBackerGeom, emojiG
 	    resultsUpdateTimeout = setTimeout( function(){
 		    that.goResults(.5);
 		}, 5000 );
-
     }
-	function getMoodsAndResults(){
-	    var emojiSetting = SystemSettings.findOne({name:'ipadEmoji'}).value;
-	    var moods;
-	    var results;
-	    if (emojiSetting == 'emoji'){
-		    moods = ['happy', 'neutral', 'sad'];
-		    results = [ {answer:'HAPPY', result:{percent:0, votes:0}},
-		    			{answer:'NEUTRAL', result:{percent:0, votes:0}},
-		    			{answer:'SAD', result:{percent:0, votes:0}} ];
-	    } else if (emojiSetting == 'thumbs') {
-		    moods = ['thumbsUp', 'neutral', 'thumbsDown'];
-		    results = [ {answer:'THUMBS UP', result:{percent:0, votes:0}},
-		    			{answer:'NEUTRAL', result:{percent:0, votes:0}},
-		    			{answer:'THUMBS DOWN', result:{percent:0, votes:0}}  ];
-	    }
-	    return {moods:moods, results:results};
-	}
-
 }
 Emojis.prototype = Object.create(THREE.Object3D.prototype);
 Emojis.prototype.constructor = Emojis;

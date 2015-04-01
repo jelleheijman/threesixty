@@ -5,6 +5,11 @@ var QuestionDisplay = function( flare ) {
 	this.mode;
 
 	var answerBox = new AnswerBox();
+	answerBox.addEventListener('ready', function(e){
+		setTimeout( function(){
+			that.dispatchEvent(e);
+		}, 100)		
+	});
 	this.add(answerBox);
 
 	var questionFontSize = 50;
@@ -14,6 +19,8 @@ var QuestionDisplay = function( flare ) {
 	var questionLeftOff = -4000;
 	var questionRightOff = 4000;
 	var questionWidth, questionHeight;
+	var questionData;
+	var questionNeedsUpdate = false;
 	
 	
 	// CREATE CENTER QUESTION MESH
@@ -55,7 +62,8 @@ var QuestionDisplay = function( flare ) {
 	flare2.scale.y = 100;
 	flare2.scale.x = 200;
 
-	this.setQuestion = function(questionData){
+	this.setQuestion = function(_questionData){
+		questionData = _questionData;
 		questionMesh.geometry.dispose();
 		questionMesh.geometry = getText(questionData.questionText.toUpperCase());
 		questionMesh.geometry.needsUpdate = true;
@@ -83,7 +91,6 @@ var QuestionDisplay = function( flare ) {
 		questionMeshRight.position.x = - questionWidth * sideQuestionScale;
 		questionMeshLeft.position.x = 0;
 		
-
 		var answers = [];
 		for (var i=1; i<=6; i++){
 			if (questionData['answer' + i.toString()]){
@@ -91,22 +98,25 @@ var QuestionDisplay = function( flare ) {
 			}
 		}
 		if (answers.length > 1) {
-			answerBox.addEventListener('ready', function(){
-				setTimeout( function(){
-					answerBox.setAnswers(answers);
-				}, 1000)
-			});
+			answerBox.setAnswers(answers);
 		}
 	}
 	
-	this.updateQuestion = function(questionData){
-		if (that.visible && answerBox.visible) {
-			var activeQuestion = SystemSettings.findOne({name:'activeQuestion'}).value;
-			if ( questionData._id == activeQuestion ) {
-				answerBox.updateAnswers(questionData);
-			}
-		}
+	this.updateQuestion = function(_questionData){
+		questionData = _questionData;
+		questionNeedsUpdate = true;
 	}
+	setInterval( function(){
+		if (questionNeedsUpdate) {
+			if (that.visible && answerBox.visible) {
+				var activeQuestion = SystemSettings.findOne({name:'activeQuestion'}).value;
+				if ( questionData._id == activeQuestion ) {
+					answerBox.updateAnswers(questionData);
+				}
+			}
+			questionNeedsUpdate = false;
+		}
+	}, 2000);
 	
 	this.setMode = function(mode){
 		var dur = 0;
