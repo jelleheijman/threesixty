@@ -87,7 +87,6 @@ if (Meteor.isServer) {
 					var questionDb = Questions.findOne(question);
 					var total = questionDb.result1.votes + questionDb.result2.votes + questionDb.result3.votes + 
 								questionDb.result4.votes + questionDb.result5.votes + questionDb.result6.votes;
-					var setQuery = {$set:{}};
 					
 					Questions.update(question, {$set:{'result1.percent':questionDb.result1.votes/total,
 													  'result2.percent':questionDb.result2.votes/total,
