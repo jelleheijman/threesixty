@@ -23,6 +23,9 @@ var DomPlane = function( html, css ) {
 	}
 	
 	this.render = function(){
+		if (tex){
+			tex.dispose();
+		}
 		var domElement = document.createElement( 'div' );
 		//domElement.style.padding = '1%';
 		domElement.innerHTML = that.html;
