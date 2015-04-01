@@ -87,7 +87,7 @@ if (Meteor.isClient) {
 				var n = IRLibLoader.load('/js/AnswerBox.js', {error:function(e){console.log(e);}});
 				var o = IRLibLoader.load('/js/BackgroundScene.js', {error:function(e){console.log(e);}});
 				
-				if(a.ready() & b.ready() & c.ready() & d.ready() & /*e.ready() &*/ f.ready() && g.ready() && h.ready() && h2.ready() && i.ready() && j.ready() && k.ready() && l.ready() && m.ready() && n.ready() && o.ready()){
+				if(a.ready() && b.ready() && c.ready() & d.ready() && /*e.ready() &*/ f.ready() && g.ready() && h.ready() && h2.ready() && i.ready() && j.ready() && k.ready() && l.ready() && m.ready() && n.ready() && o.ready()){
 					this.next();
 				}
 			}
