@@ -102,7 +102,7 @@ var QuestionDisplay = function( flare ) {
 		var answers = [];
 		for (var i=1; i<=6; i++){
 			if (questionData['answer' + i.toString()]){
-				answers.push( {answer:questionData['answer' + i.toString()], result:questionData['result' + i.toString()]} );
+				answers.push( {answer:questionData['answer' + i.toString()], color:questionData['answerColor' + i.toString()], result:questionData['result' + i.toString()]} );
 			}
 		}
 		/// AND ASSUMING WE HAVE ANSWERS, LET'S SET THEM TO THE CURRENT ANSWERS

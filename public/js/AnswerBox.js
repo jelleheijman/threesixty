@@ -95,12 +95,10 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
     this.votes;
     
     this.setAnswer = function( answerData, scale, barSize ){
-	    
-	    //// TODO:  NEED TO BE SURE WE FULLY FREE MEMORY FROM THE PREVIOUS ANSWER, IF ANY, BEFORE CREATING NEW.
-	    
 	    answerText = answerData.answer;
 	    that.percent = answerData.result.percent;
 	    that.votes = answerData.result.votes;
+	    
 	    plane.html = answerText.toUpperCase();
 	    plane.render();
 	    bar.scale.y = bar.scale.z = barSize;
@@ -108,6 +106,7 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
 		    that.percent = .01;
 	    }
 	    bar.scale.x = that.percent;
+		setColor( answerData.color )
 	    valueNumber.position.x = -600 + meshWidth * (that.percent+.03) + 84;
 	    valueNumber.setNum( that.percent );
 	    //plane.setScale(scale);
@@ -124,9 +123,10 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
 	    }});
     }
     
-    
-    this.setColor = function( answerColor ){
-	    
+    function setColor( answerColor ){
+	    barMaterial.color = new THREE.Color(answerColor);
+	    barMaterial.needsUpdate = true;
+	    console.log(answerColor, barMaterial.color);
     }
     
     this.tick = function(){
@@ -136,13 +136,13 @@ var Answer = function( scale, barSize, iter, valueNumberGenerator ) {
 	    }
     }
     
-    
     var plane = new DomPlane( 'INITIAL QUESTION TEXT', css );
     plane.eventEmitter.addEventListener('ready', planeReady);
     this.add(plane.mesh);
     
     var meshWidth = 1350;
-    var barMesh = new THREE.Mesh( new THREE.BoxGeometry(meshWidth, 45, 45), new THREE.MeshPhongMaterial({color:0xFF0000, shininess:150}) );
+    var barMaterial = new THREE.MeshPhongMaterial({color:0xFF0000, shininess:150});
+    var barMesh = new THREE.Mesh( new THREE.BoxGeometry(meshWidth, 45, 45), barMaterial );
     barMesh.position.x = meshWidth/2;
     barMesh.rotation.x = .02 * iter;
     var bar = new THREE.Object3D();

@@ -1,6 +1,8 @@
-if (Meteor.isClient) {
+if (Meteor.isClient) { 
 	
-	var colorOptions = [ '#FF0000', '#009900', '#777777', '#D50000', '#0087DC', '#FDBB30', '#FFF95D', '#EFE600',  ];
+	var colorOptions = [ {name:'Red', hex:'rgb(255,0,0)'}, {name:'Green', hex:'rgb(0,153,0)'}, {name:'Gray', hex:'rgb(125,125,125)'},
+						 {name:'Labour', hex:'rgb(215,0,0)'}, {name:'Conservative', hex:'rgb(0,135,220)'}, {name:'Lib Dem', hex:'rgb(253,187,48)'},
+						 {name:'SNP', hex:'rgb(255,249,93)'}, {name:'UKIP', hex:'rgb(239,230,0)'},  ];
 	
 	Template.controllerQuestions.helpers({
 		questions: function(){
@@ -22,6 +24,11 @@ if (Meteor.isClient) {
 		},
 		questionData:function(key, which){
 			return Session.get(which) ? Session.get(which)[key] : null;		
+		},
+		colorSelected:function( which, color ){
+			if (Session.get('editQuestion')) {
+				return Session.get('editQuestion')['answerColor' + which] == color ? 'selected' : "";
+			}
 		},
 		questionFormHeader: function(){
 			return Session.get('editQuestion') != 'new' ? "EDIT QUESTION" : "ADD QUESTION";		
